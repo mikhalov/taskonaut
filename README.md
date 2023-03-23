@@ -45,33 +45,16 @@ These instructions will help you set up the Taskonaut project on your local mach
 1. Clone the repository:
    git clone https://github.com/larbadge/taskonaut.git
 
-css
-Copy code
 2. Navigate to the project directory:
    cd taskonaut
 
-markdown
-Copy code
 3. Install the dependencies:
    mvn install
 
-Copy code
-or
-gradle build
-
-markdown
-Copy code
 4. Configure the `application.properties` or `application.yml` file with your database credentials and other necessary settings.
 
 5. Run the application:
    mvn spring-boot:run
-
-Copy code
-or
-gradle bootRun
-
-vbnet
-Copy code
 
 The application should now be running at `http://localhost:8080`.
 
