@@ -1,0 +1,36 @@
+.card {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-footer {
+    background-color: #f5f5f5;
+    border-top: none;
+}
+
+.btn-group>.btn-secondary.dropdown-toggle:focus, .btn-group>.btn-secondary.dropdown-toggle:hover {
+    background-color: #f5f5f5;
+    border-color: #f5f5f5;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+}
+
+@media (min-width: 576px) {
+    .card-columns {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-columns {
+        column-count: 3;
+    }
+}

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<header th:replace="layout :: header"></header>
+<main>
+    <h1 th:text="${note.title}"></h1>
+    <p th:text="${note.content}"></p>
+    <a th:href="@{/notes}">Back to list</a>
+</main>
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>
