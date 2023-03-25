@@ -63,15 +63,3 @@ function closeModal() {
     const modal = document.getElementById("editModal");
     modal.classList.add("hidden");
 }
-
-
-
-function deleteNote(noteId) {
-    fetch('/notes/' + noteId, {
-        method: 'DELETE',
-    }).then(() => {
-        window.location.reload();
-    }).catch((error) => {
-        console.error('Error:', error);
-    });
-}

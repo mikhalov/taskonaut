@@ -19,7 +19,7 @@
                         <span class="dot"></span>
                 </div>
                 <div class="dropdown-menu" aria-labelledby="menu-button">
-                    <a class="dropdown-item" href="#" onclick="deleteNote()">Delete</a>
+                    <button class="dropdown-item" th:attr="data-note-id=${note.id}" onclick="deleteNote(this.getAttribute('data-note-id'))">Delete</button>
                     <a class="dropdown-item" href="#" onclick="editNote()">Edit</a>
                     <a class="dropdown-item" href="#" onclick="shareNote()">Share</a>
                 </div>

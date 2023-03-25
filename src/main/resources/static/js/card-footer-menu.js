@@ -16,10 +16,17 @@ document.addEventListener("DOMContentLoaded", function() {
   };
 });
 
-function deleteNote() {
-  // code to delete the note
-  closeMenu();
+function deleteNote(noteId) {
+    fetch('/notes/' + noteId, {
+        method: 'DELETE',
+    }).then(() => {
+        window.location.reload();
+    }).catch((error) => {
+        console.error('Error:', error);
+    });
+    closeMenu();
 }
+
 
 function editNote() {
   // code to edit the note
