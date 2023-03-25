@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Note Card Fragment</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
 <div class="col-lg-4 col-md-6 col-sm-12 mb-3" th:fragment="note-card (note)">
@@ -14,14 +15,14 @@
         <div class="card-footer">
             <div class="btn-group">
                 <a class="btn btn-secondary btn-sm" th:href="@{/notes/{id}(id=${note.id})}">View</a>
-                <a class="btn btn-secondary btn-sm" th:href="@{/notes/{id}/edit(id=${note.id})}">Edit</a>
+                <a class="btn btn-secondary btn-sm" th:attr="data-note-id=${note.id}" onclick="openModal(this.getAttribute('data-note-id'))" href="javascript:void(0)">Edit</a>
                 <div class="btn-group">
                     <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                         Actions
                     </button>
                     <div class="dropdown-menu">
-                        <button type="button" class="dropdown-item text-danger" onclick="deleteNote(__${note.id}__)">Delete</button>
+                        <button class="btn btn-danger" th:attr="data-note-id=${note.id}" onclick="deleteNote(this.getAttribute('data-note-id'))">Delete</button>
                     </div>
                 </div>
             </div>

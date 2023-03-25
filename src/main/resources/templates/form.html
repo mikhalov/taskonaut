@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout :: head"></head>
+<head th:replace="layout :: head">
+
+</head>
 <body>
 <header th:replace="layout :: header"></header>
+<div class="container-fluid mt-3">
 <main>
     <h1 th:text="${note.id == null ? 'Create Note' : 'Edit Note'}"></h1>
     <form th:action="@{/notes/{id}(id=${note.id})}" th:object="${note}" method="post">
@@ -14,7 +17,7 @@
         <button type="submit">Save</button>
     </form>
 </main>
+</div>
 <footer th:replace="layout :: footer"></footer>
-
 </body>
 </html>

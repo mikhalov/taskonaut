@@ -14,6 +14,7 @@ import java.util.List;
 public class Notebook {
     @Id
     @GeneratedValue(generator = "UUID")
+    @Column(name = "notebook_id")
     private String id;
     private String name;
     @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL)

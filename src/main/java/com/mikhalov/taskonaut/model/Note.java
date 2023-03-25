@@ -16,9 +16,9 @@ public class Note {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "note_id")
     private String id;
     private String title;
-    @Lob
     private String content;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;

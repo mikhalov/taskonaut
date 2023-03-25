@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout :: head"></head>
+<link rel="stylesheet" type="text/css" href="css/styles.css">
 <body>
 <header th:replace="layout :: header"></header>
+<div class="container-fluid mt-3">
 <main>
     <h1 th:text="${note.title}"></h1>
     <p th:text="${note.content}"></p>
     <a th:href="@{/notes}">Back to list</a>
 </main>
+</div>
 <footer th:replace="layout :: footer"></footer>
 </body>
 </html>

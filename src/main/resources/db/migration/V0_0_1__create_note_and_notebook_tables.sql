@@ -1,20 +1,20 @@
 CREATE TABLE note (
-    id VARCHAR(255) NOT NULL,
-    content OID,
-    creation_date TIMESTAMP,
-    last_modified_date TIMESTAMP,
+    note_id VARCHAR(255) NOT NULL,
+    content TEXT,
+    creation_date TIMESTAMP(0) DEFAULT NOW(),
+    last_modified_date TIMESTAMP(0),
     title VARCHAR(255),
     notebook_id VARCHAR(255),
-    PRIMARY KEY (id)
+    PRIMARY KEY (note_id)
 );
 
 CREATE TABLE notebook (
-    id VARCHAR(255) NOT NULL,
+    notebook_id VARCHAR(255) NOT NULL,
     name VARCHAR(255),
-    PRIMARY KEY (id)
+    PRIMARY KEY (notebook_id)
 );
 
 ALTER TABLE note
     ADD CONSTRAINT FKa5rc3ktp8e452prs5e0ylluwj
     FOREIGN KEY (notebook_id)
-    REFERENCES notebook (id);
+    REFERENCES notebook (notebook_id);
