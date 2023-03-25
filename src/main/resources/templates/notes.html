@@ -5,18 +5,22 @@
     <title>Notes</title>
     <head th:replace="layout :: head"></head>
     <script th:src="@{/js/scripts.js}"></script>
+    <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+    <script th:src="@{/js/mansory-init.js}"></script>
 </head>
-<body>
+<body onload="initMasonry();"> <!-- Add onload here -->
 <header th:replace="layout :: header"></header>
 
+<div class="d-grid gap-2">
+    <a class="btn btn-primary" href="/notes/new">Create a new note</a>
+</div>
 <div class="container-fluid mt-3">
-    <div class="row">
+    <div class="notes-grid"> <!-- Add the notes-grid class here -->
         <th:block th:each="note : ${notes}">
-            <div th:replace="fragments/note-card :: note-card (note=${note})"></div>
+            <div class="grid-item" th:replace="fragments/note-card :: note-card (note=${note})"></div>
         </th:block>
     </div>
 </div>
-<a class="btn btn-success fixed-bottom" href="/notes/new">Create a new note</a>
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
     </div>

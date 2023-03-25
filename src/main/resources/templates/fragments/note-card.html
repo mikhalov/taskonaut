@@ -6,11 +6,11 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
-<div class="col-lg-4 col-md-6 col-sm-12 mb-3" th:fragment="note-card (note)">
+<div class="col-lg-4 col-md-6 col-sm-12 mb-3 grid-item" th:fragment="note-card (note)">
     <div class="card bg-light">
         <div class="card-body">
             <h5 class="card-title" th:text="${note.title}"></h5>
-            <p class="card-text" th:text="${note.content}"></p>
+            <p class="card-text" th:utext="${note.content}"></p>
         </div>
         <div class="card-footer">
             <div class="btn-group">

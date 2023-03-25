@@ -65,6 +65,7 @@ function closeModal() {
 }
 
 
+
 function deleteNote(noteId) {
     fetch('/notes/' + noteId, {
         method: 'DELETE',
