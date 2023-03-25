@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <title>Notes</title>
     <head th:replace="layout :: head"></head>
-    <script th:src="@{/js/scripts.js}"></script>
+    <link rel="stylesheet" type="text/css" href="css/three-dots.css">
     <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
     <script th:src="@{/js/mansory-init.js}"></script>
 </head>
-<body onload="initMasonry();"> <!-- Add onload here -->
+<body onload="initMasonry();">
 <header th:replace="layout :: header"></header>
 
 <div class="d-grid gap-2">
     <a class="btn btn-primary" href="/notes/new">Create a new note</a>
 </div>
 <div class="container-fluid mt-3">
-    <div class="notes-grid"> <!-- Add the notes-grid class here -->
+    <div class="notes-grid">
         <th:block th:each="note : ${notes}">
-            <div class="grid-item" th:replace="fragments/note-card :: note-card (note=${note})"></div>
+            <div th:replace="fragments/note-card :: note-card (note=${note})"></div>
         </th:block>
     </div>
 </div>
@@ -25,6 +25,7 @@
     <div class="modal-content">
     </div>
 </div>
-<footer th:replace="layout :: footer"></footer>
+<script th:src="@{/js/scripts.js}"></script>
+<script th:src="@{/js/card-footer-menu.js}"></script>
 </body>
 </html>

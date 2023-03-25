@@ -5,9 +5,6 @@ function initMasonry() {
         itemSelector: '.grid-item',
         columnWidth: '.grid-item',
         gutter: 10,
-//        fitWidth: true,
         percentPosition: true
     });
-
-
 }
