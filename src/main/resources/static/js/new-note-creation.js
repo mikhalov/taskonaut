@@ -4,16 +4,24 @@
     var noteForm = document.getElementById('note-form');
     var noteTitle = document.getElementById('note-title');
 
+    function autoResize(textarea) {
+      var minHeight = parseInt(window.getComputedStyle(textarea).getPropertyValue('min-height'));
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.max(textarea.scrollHeight, minHeight) + 'px';
+    }
+
     function createNoteContent() {
       var noteContent = document.createElement('textarea');
       noteContent.id = 'note-content';
-      noteContent.rows = '2';
-      noteContent.cols = '100';
+      noteContent.rows = '1';
       noteContent.placeholder = 'Write your note here...';
 
       noteContent.addEventListener('input', function() {
         hiddenNoteContent.value = noteContent.value;
+         autoResize(noteContent);
       });
+
+      autoResize(noteContent);
 
       return noteContent;
     }

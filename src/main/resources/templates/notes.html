@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Notes</title>
+    <title>Taskonaut</title>
     <head th:replace="layout :: head"></head>
     <link rel="stylesheet" type="text/css" href="css/three-dots.css">
     <link rel="stylesheet" type="text/css" href="css/note-input.css">
@@ -13,10 +13,10 @@
 <header th:replace="layout :: header"></header>
 
 <div class="note-container">
-    <form id="note-form" th:action="@{/notes}" th:object="${note}" method="post">
+    <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
         <div class="note-wrapper" id="note-wrapper">
-            <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
-            <input type="hidden" id="hidden-note-content" th:field="*{content}">
+            <input type="text" id="note-title"  th:field="*{title}" placeholder="Note Title" required>
+            <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
         </div>
     </form>
 </div>

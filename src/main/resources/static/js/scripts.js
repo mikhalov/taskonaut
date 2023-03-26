@@ -25,14 +25,6 @@ async function openModal(noteId) {
             modal.classList.remove("hidden");
 
             const form = modalContent.querySelector("form");
-
-            form.addEventListener("submit", async (event) => {
-                event.preventDefault();
-                await submitForm(noteId, form);
-            });
-
-            cancelButton.addEventListener("click", closeModal);
-
         } else {
             console.error('Error fetching the form:', response.status);
         }
@@ -41,22 +33,6 @@ async function openModal(noteId) {
     }
 }
 
-async function submitForm(noteId, form) {
-    const formData = new FormData(form);
-    try {
-        const response = await fetch('/notes/' + noteId, {
-            method: 'POST',
-            body: formData,
-        });
-        if (response.ok) {
-            location.reload();
-        } else {
-            console.error('Error submitting the form:', response.status);
-        }
-    } catch (error) {
-        console.error('Error submitting the form:', error);
-    }
-}
 
 function closeModal() {
     const modal = document.getElementById("editModal");

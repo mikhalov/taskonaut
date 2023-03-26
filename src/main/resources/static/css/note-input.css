@@ -2,13 +2,13 @@
   width: 100%;
   text-align: center;
   display: inline-block;
-  margin-top: 50px; /* Adjust this value to position the note container vertically */
+  margin: 32px auto 16px auto;
 }
 
 .note-wrapper {
   width: 60vw;
-   min-height: 40px;
-   box-sizing: border-box;
+  min-height: 40px;
+  box-sizing: border-box;
   display: inline-block;
   border: 1px solid #ccc;
   padding: 10px;
@@ -24,16 +24,13 @@
 }
 
 #note-content {
-  display: none;
   width: 100%;
   border: none;
   outline: none;
-  resize: vertical;
   background: transparent;
-}
-
-.note-wrapper.active {
-  background: #fff;
+  display: none;
+   overflow: hidden;
+    resize: none;
 }
 
 .note-wrapper.active #note-content {
