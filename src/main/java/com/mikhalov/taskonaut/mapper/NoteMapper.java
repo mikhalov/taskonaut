@@ -14,11 +14,19 @@ public interface NoteMapper {
     NoteMapper INSTANCE = Mappers.getMapper(NoteMapper.class);
 
     default Note toNote(NoteData noteData) {
-        return new Note(noteData.getTitle(), noteData.getContent());
+        return Note.builder()
+                .id(noteData.getId())
+                .title(noteData.getTitle())
+                .content(noteData.getContent())
+                .build();
     }
 
     default NoteData toNoteData(Note note) {
-        return new NoteData( note.getTitle(), note.getContent());
+        return NoteData.builder()
+                .id(note.getId())
+                .title(note.getTitle())
+                .content(note.getContent())
+                .build();
     }
 
     List<NoteData> toNoteDataList(List<Note> notes);

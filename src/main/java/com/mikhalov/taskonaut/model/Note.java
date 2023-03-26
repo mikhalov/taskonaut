@@ -1,9 +1,8 @@
 package com.mikhalov.taskonaut.model;
 
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
@@ -11,6 +10,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Note {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -26,12 +28,5 @@ public class Note {
     @JoinColumn(name = "notebook_id")
     private Notebook notebook;
 
-    public Note(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
-    public Note() {
-    }
 }
 
