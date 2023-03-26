@@ -8,13 +8,9 @@
 <div class="container-fluid mt-3">
 <main>
     <h1 th:text="${note.id == null ? 'Create Note' : 'Edit Note'}"></h1>
-    <form th:action="@{/notes/{id}(id=${note.id})}" th:object="${note}" method="post">
-        <input type="hidden" th:field="*{id}" />
-        <label for="title">Title:</label>
+    <form th:action="@{/notes}" th:object="${note}" method="post">
         <input type="text" th:field="*{title}" id="title" />
-        <label for="content">Content:</label>
         <textarea th:field="*{content}" id="content"></textarea>
-        <button type="submit">Save</button>
     </form>
 </main>
 </div>

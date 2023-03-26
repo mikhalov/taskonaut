@@ -1,0 +1,41 @@
+.note-container {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  margin-top: 50px; /* Adjust this value to position the note container vertically */
+}
+
+.note-wrapper {
+  width: 80vw; /* Adjust the vw value as needed */
+   min-height: 40px; /* Adjust the height as needed */
+   box-sizing: border-box;
+  display: inline-block;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: text;
+}
+
+#note-title {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+#note-content {
+  display: none;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  background: transparent;
+}
+
+.note-wrapper.active {
+  background: #fff;
+}
+
+.note-wrapper.active #note-content {
+  display: block;
+}

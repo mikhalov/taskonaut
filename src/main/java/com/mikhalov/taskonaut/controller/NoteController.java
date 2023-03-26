@@ -37,7 +37,7 @@ public class NoteController {
     public String fillNew(Model model) {
         log.info("return empty node");
         model.addAttribute("note", new Note());
-        return "form";
+        return "fragments/form-fragment";
     }
 
     @GetMapping("/{id}")

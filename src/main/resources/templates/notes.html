@@ -5,15 +5,24 @@
     <title>Notes</title>
     <head th:replace="layout :: head"></head>
     <link rel="stylesheet" type="text/css" href="css/three-dots.css">
+    <link rel="stylesheet" type="text/css" href="css/note-input.css">
     <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
     <script th:src="@{/js/mansory-init.js}"></script>
 </head>
 <body onload="initMasonry();">
 <header th:replace="layout :: header"></header>
 
-<div class="d-grid gap-2">
-    <a class="btn btn-primary" href="/notes/new">Create a new note</a>
+<div class="note-container">
+    <div class="note-wrapper">
+        <input type="text" id="note-title" placeholder="Note Title">
+    </div>
 </div>
+
+<!--<form th:action="@{/notes}" th:object="${note}" method="post">-->
+<!--    <input type="hidden" th:field="*{title}" />-->
+<!--    <input type="hidden" th:field="*{content}" />-->
+<!--</form>-->
+
 <div class="container-fluid mt-3">
     <div class="notes-grid">
         <th:block th:each="note : ${notes}">
@@ -27,5 +36,6 @@
 </div>
 <script th:src="@{/js/scripts.js}"></script>
 <script th:src="@{/js/card-footer-menu.js}"></script>
+<script th:src="@{/js/new-note-creation.js}"></script>
 </body>
 </html>
