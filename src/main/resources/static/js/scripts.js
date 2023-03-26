@@ -18,14 +18,13 @@ async function openModal(noteId) {
     });
 
     try {
-        const response = await fetch('/notes/' + noteId + '/edit');
+        const response = await fetch('/notes/' + noteId);
         if (response.ok) {
             const formHtml = await response.text();
             modalContent.innerHTML = formHtml;
             modal.classList.remove("hidden");
 
             const form = modalContent.querySelector("form");
-            const cancelButton = form.querySelector(".btn-secondary");
 
             form.addEventListener("submit", async (event) => {
                 event.preventDefault();
@@ -50,7 +49,7 @@ async function submitForm(noteId, form) {
             body: formData,
         });
         if (response.ok) {
-            location.reload(); // Reload the page to update the note card
+            location.reload();
         } else {
             console.error('Error submitting the form:', response.status);
         }

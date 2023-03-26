@@ -6,8 +6,8 @@
 }
 
 .note-wrapper {
-  width: 80vw; /* Adjust the vw value as needed */
-   min-height: 40px; /* Adjust the height as needed */
+  width: 60vw;
+   min-height: 40px;
    box-sizing: border-box;
   display: inline-block;
   border: 1px solid #ccc;

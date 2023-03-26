@@ -20,9 +20,16 @@ public class Note {
     private String id;
     private String title;
     private String content;
-    private LocalDateTime creationDate;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime lastModifiedDate;
     @ManyToOne
     @JoinColumn(name = "notebook_id")
     private Notebook notebook;
+
+    public Note(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
+

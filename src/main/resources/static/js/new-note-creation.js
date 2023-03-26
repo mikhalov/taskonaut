@@ -1,34 +1,43 @@
-var noteWrapper = document.querySelector('.note-wrapper');
+ (function() {
+    var noteWrapper = document.getElementById('note-wrapper');
+    var hiddenNoteContent = document.getElementById('hidden-note-content');
+    var noteForm = document.getElementById('note-form');
+    var noteTitle = document.getElementById('note-title');
 
-noteWrapper.addEventListener('click', function(e) {
-  var noteContent = document.getElementById('note-content');
+    function createNoteContent() {
+      var noteContent = document.createElement('textarea');
+      noteContent.id = 'note-content';
+      noteContent.rows = '2';
+      noteContent.cols = '100';
+      noteContent.placeholder = 'Write your note here...';
 
-  if (!noteContent) {
-    noteContent = document.createElement('textarea');
-    noteContent.id = 'note-content';
-    noteContent.rows = '2';
-    noteContent.cols = '100';
-    noteContent.placeholder = 'Write your note here...';
-    noteWrapper.appendChild(noteContent);
-    noteWrapper.classList.add('active');
-  }
-});
+      noteContent.addEventListener('input', function() {
+        hiddenNoteContent.value = noteContent.value;
+      });
 
-document.addEventListener('click', function(e) {
-  var target = e.target;
-
-  while (target.parentNode) {
-    if (target === noteWrapper) {
-      return;
+      return noteContent;
     }
 
-    target = target.parentNode;
-  }
+    noteWrapper.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!document.getElementById('note-content')) {
+        var noteContent = createNoteContent();
+        noteWrapper.appendChild(noteContent);
+        noteWrapper.classList.add('active');
+      }
+    });
 
-  var noteContent = document.getElementById('note-content');
+    document.addEventListener('click', function(e) {
+      if (!noteWrapper.contains(e.target) && document.getElementById('note-content')) {
+        var noteContent = document.getElementById('note-content');
+        hiddenNoteContent.value = noteContent.value;
+        noteWrapper.classList.remove('active');
+        noteContent.parentNode.removeChild(noteContent);
 
-  if (noteContent) {
-    noteWrapper.classList.remove('active');
-    noteContent.parentNode.removeChild(noteContent);
-  }
-});
+
+        if (noteTitle.value.trim() !== '') {
+          noteForm.submit();
+        }
+      }
+    });
+  })();

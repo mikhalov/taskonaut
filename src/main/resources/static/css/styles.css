@@ -5,8 +5,9 @@
 }
 
 .card-body {
-    max-height: 300px; /* Set the maximum height for the card body */
+    max-height: 300px;
     overflow: hidden;
+    cursor: pointer
 }
 
 .card-footer {

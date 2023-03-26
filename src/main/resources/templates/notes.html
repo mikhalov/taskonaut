@@ -13,16 +13,13 @@
 <header th:replace="layout :: header"></header>
 
 <div class="note-container">
-    <div class="note-wrapper">
-        <input type="text" id="note-title" placeholder="Note Title">
-    </div>
+    <form id="note-form" th:action="@{/notes}" th:object="${note}" method="post">
+        <div class="note-wrapper" id="note-wrapper">
+            <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
+            <input type="hidden" id="hidden-note-content" th:field="*{content}">
+        </div>
+    </form>
 </div>
-
-<!--<form th:action="@{/notes}" th:object="${note}" method="post">-->
-<!--    <input type="hidden" th:field="*{title}" />-->
-<!--    <input type="hidden" th:field="*{content}" />-->
-<!--</form>-->
-
 <div class="container-fluid mt-3">
     <div class="notes-grid">
         <th:block th:each="note : ${notes}">
