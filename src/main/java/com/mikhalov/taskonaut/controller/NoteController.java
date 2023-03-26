@@ -1,6 +1,6 @@
 package com.mikhalov.taskonaut.controller;
 
-import com.mikhalov.taskonaut.bean.NoteData;
+import com.mikhalov.taskonaut.bean.NoteDTO;
 import com.mikhalov.taskonaut.service.NoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +25,24 @@ public class NoteController {
     @GetMapping
     public ModelAndView getAllNotes(ModelAndView modelAndView) {
         log.info("getting all");
-        List<NoteData> notes = noteService.getAllNotes();
-        modelAndView.addObject("note", new NoteData());
+        List<NoteDTO> notes = noteService.getAllNotes();
+        modelAndView.addObject("note", new NoteDTO());
         modelAndView.addObject("notes", notes);
         return modelAndView;
     }
 
 
     @PostMapping()
-    public RedirectView createNote(@ModelAttribute NoteData noteData) {
-        log.info("creating new note {}", noteData);
-        noteService.createNote(noteData);
+    public RedirectView createNote(@ModelAttribute NoteDTO noteDTO) {
+        log.info("creating new note {}", noteDTO);
+        noteService.createNote(noteDTO);
         return new RedirectView("/notes");
     }
 
     @GetMapping("/{id}")
     public ModelAndView getNoteById(@PathVariable String id, ModelAndView modelAndView) {
         log.info("getting by {}id", id);
-        NoteData note = noteService.getNoteById(id);
+        NoteDTO note = noteService.getNoteById(id);
         modelAndView.addObject("note", note);
         modelAndView.setViewName("fragments/form-fragment");
         return modelAndView;
@@ -50,9 +50,9 @@ public class NoteController {
 
 
     @PutMapping("/{id}")
-    public RedirectView updateNote(@PathVariable String id, @ModelAttribute NoteData noteData) {
+    public RedirectView updateNote(@PathVariable String id, @ModelAttribute NoteDTO noteDTO) {
         log.info("updating note {}id", id);
-        noteService.updateNote(id, noteData);
+        noteService.updateNote(id, noteDTO);
         return new RedirectView("/notes");
     }
 

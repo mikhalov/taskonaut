@@ -1,36 +1,26 @@
 package com.mikhalov.taskonaut.mapper;
 
-import com.mikhalov.taskonaut.bean.NoteData;
+import com.mikhalov.taskonaut.bean.NoteDTO;
 import com.mikhalov.taskonaut.model.Note;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface NoteMapper {
 
-    NoteMapper INSTANCE = Mappers.getMapper(NoteMapper.class);
 
-    default Note toNote(NoteData noteData) {
-        return Note.builder()
-                .id(noteData.getId())
-                .title(noteData.getTitle())
-                .content(noteData.getContent())
-                .build();
-    }
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
+    @Mapping(target = "notebook", ignore = true)
+    Note toNote(NoteDTO noteDTO);
 
-    default NoteData toNoteData(Note note) {
-        return NoteData.builder()
-                .id(note.getId())
-                .title(note.getTitle())
-                .content(note.getContent())
-                .build();
-    }
+    NoteDTO toNoteData(Note note);
 
-    List<NoteData> toNoteDataList(List<Note> notes);
+    List<NoteDTO> toNoteDataList(List<Note> notes);
 
-    void updateNote(NoteData noteData, @MappingTarget Note note);
+    void updateNote(NoteDTO noteDTO, @MappingTarget Note note);
 
 }

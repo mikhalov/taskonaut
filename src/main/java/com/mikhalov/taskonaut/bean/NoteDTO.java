@@ -5,10 +5,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class NoteData {
+public class NoteDTO {
     private String id;
     private String title;
     private String content;
