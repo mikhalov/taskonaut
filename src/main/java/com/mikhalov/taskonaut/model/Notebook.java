@@ -20,4 +20,14 @@ public class Notebook {
     @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL)
     private List<Note> notes;
 
+    public void addNote(Note note) {
+        notes.add(note);
+        note.setNotebook(this);
+    }
+
+    public void removeNote(Note note) {
+        notes.remove(note);
+        note.setNotebook(null);
+    }
+
 }

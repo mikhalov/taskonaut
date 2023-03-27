@@ -1,6 +1,6 @@
 package com.mikhalov.taskonaut.service;
 
-import com.mikhalov.taskonaut.bean.NoteDTO;
+import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.mapper.NoteMapper;
 import com.mikhalov.taskonaut.model.Note;
 import com.mikhalov.taskonaut.repository.NoteRepository;

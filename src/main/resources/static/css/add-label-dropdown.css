@@ -1,0 +1,70 @@
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+}
+
+.custom-dropdown-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: white; /* Make the text white */
+}
+
+.custom-dropdown-content {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: left;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  left: 0; /* Align the dropdown content to the left */
+}
+
+.custom-dropdown-content a {
+  display: block;
+  padding: 5px 10px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #333;
+  white-space: nowrap;
+}
+
+.custom-dropdown-content a:hover,
+.custom-dropdown-content a:focus {
+  color: #fff;
+  background-color: #007bff;
+  text-decoration: none;
+}
+
+.show {
+  display: block;
+}
+
+.input-container {
+    position: relative;
+    display: inline-block;
+}
+
+input[name="labelName"] {
+    padding-right: 60px;
+}
+
+.input-submit {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}

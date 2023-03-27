@@ -1,4 +1,4 @@
-package com.mikhalov.taskonaut.bean;
+package com.mikhalov.taskonaut.dto;
 
 import lombok.*;
 

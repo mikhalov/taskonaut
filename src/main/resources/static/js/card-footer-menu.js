@@ -38,16 +38,6 @@ function deleteNote(noteId) {
 }
 
 
-function editNote() {
-  // code to edit the note
-  closeMenu();
-}
-
-function shareNote() {
-  // code to share the note
-  closeMenu();
-}
-
 function closeMenu() {
   var dropdowns = document.getElementsByClassName("dropdown-menu");
   for (var i = 0; i < dropdowns.length; i++) {
@@ -57,3 +47,33 @@ function closeMenu() {
     }
   }
 }
+
+
+function toggleDropdown(event) {
+    var dropdownContent = event.target.nextElementSibling;
+    dropdownContent.classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.addEventListener('click', function(event) {
+    if (!event.target.matches('.custom-dropdown-button')) {
+        var dropdowns = document.getElementsByClassName("custom-dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    } else {
+        // Close other dropdowns if one is clicked
+        var dropdowns = document.getElementsByClassName("custom-dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown !== event.target.nextElementSibling && openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+});
+
+

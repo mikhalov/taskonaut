@@ -1,6 +1,6 @@
 package com.mikhalov.taskonaut.controller;
 
-import com.mikhalov.taskonaut.bean.NoteDTO;
+import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.service.NoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

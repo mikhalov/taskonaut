@@ -1,6 +1,6 @@
 package com.mikhalov.taskonaut.mapper;
 
-import com.mikhalov.taskonaut.bean.NoteDTO;
+import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.model.Note;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
