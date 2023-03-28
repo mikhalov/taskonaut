@@ -1,13 +1,15 @@
 package com.mikhalov.taskonaut.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 public class NoteDTO {
     private String id;
     private String title;
     private String content;
+    private NotebookDTO notebookDTO;
 }

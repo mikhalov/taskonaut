@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Notebook {
     private String id;
     private String name;
     @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL)
-    private List<Note> notes;
+    private List<Note> notes = new ArrayList<>();
 
     public void addNote(Note note) {
         notes.add(note);

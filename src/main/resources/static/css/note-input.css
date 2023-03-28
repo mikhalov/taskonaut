@@ -31,8 +31,8 @@
   outline: none;
   background: transparent;
   display: none;
-   overflow: hidden;
-    resize: none;
+  overflow: hidden;
+  resize: none;
 }
 
 .note-wrapper.active #note-content {

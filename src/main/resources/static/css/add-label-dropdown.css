@@ -10,7 +10,8 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: white; /* Make the text white */
+  color: white;
+  /* Make the text white */
 }
 
 .custom-dropdown-content {
@@ -24,8 +25,9 @@
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
-  left: 0; /* Align the dropdown content to the left */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  left: 0;
+  /* Align the dropdown content to the left */
 }
 
 .custom-dropdown-content a {
@@ -50,21 +52,21 @@
 }
 
 .input-container {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 input[name="labelName"] {
-    padding-right: 60px;
+  padding-right: 60px;
 }
 
 .input-submit {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 100%;
-    border: none;
-    background: transparent;
-    cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }

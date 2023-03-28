@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface NoteRepository extends JpaRepository<Note, String> {
 
-    public List<Note> findAllByOrderByLastModifiedDateDesc();
+    List<Note> findAllByOrderByLastModifiedDateDesc();
 
 }

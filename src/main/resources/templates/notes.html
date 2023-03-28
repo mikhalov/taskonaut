@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Taskonaut</title>
-    <head th:replace="layout :: head"></head>
+
+    <head th:insert="layout :: head"></head>
     <link rel="stylesheet" type="text/css" href="css/three-dots.css">
     <link rel="stylesheet" type="text/css" href="css/note-input.css">
     <link rel="stylesheet" type="text/css" href="css/add-label-dropdown.css">
     <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
     <script th:src="@{/js/mansory-init.js}" defer></script>
 </head>
-<body onload="initMasonry();">
-<header th:replace="layout :: header"></header>
 
-<div class="note-container">
-    <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
-        <div class="note-wrapper" id="note-wrapper">
-            <input type="text" id="note-title"  th:field="*{title}" placeholder="Note Title" required>
-            <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
+<body onload="initMasonry();">
+    <header th:insert="layout :: header"></header>
+
+    <div class="note-container">
+        <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
+            <div class="note-wrapper" id="note-wrapper">
+                <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
+                <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
+            </div>
+        </form>
+    </div>
+    <div class="container-fluid mt-3">
+        <div class="notes-grid">
+
+            <th:block th:each="note : ${notes}">
+                <div th:insert="fragments/note-card :: note-card(note=${note})"></div>
+            </th:block>
         </div>
-    </form>
-</div>
-<div class="container-fluid mt-3">
-    <div class="notes-grid">
-        <th:block th:each="note : ${notes}">
-            <div th:replace="fragments/note-card :: note-card (note=${note})"></div>
-        </th:block>
     </div>
-</div>
-<div id="editModal" class="modal hidden">
-    <div class="modal-content">
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+        </div>
     </div>
-</div>
-<script th:src="@{/js/edit-modal.js}"></script>
-<script th:src="@{/js/card-footer-menu.js}"></script>
-<script th:src="@{/js/new-note-creation.js}"></script>
+    <script th:src="@{/js/edit-modal.js}"></script>
+    <script th:src="@{/js/card-footer-menu.js}"></script>
+    <script th:src="@{/js/new-note-creation.js}"></script>
 </body>
+
 </html>
