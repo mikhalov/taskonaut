@@ -21,10 +21,11 @@ public class Note {
     private String content;
     @Column(name = "creation_date")
     private LocalDateTime creationDate = LocalDateTime.now();
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate = LocalDateTime.now();
     @ManyToOne
-    @JoinColumn(name = "notebook_id")
-    private Notebook notebook;
+    @JoinColumn(name = "label_id")
+    private Label label;
 
 }
 

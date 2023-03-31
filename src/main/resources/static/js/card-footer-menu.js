@@ -49,33 +49,50 @@ function closeMenu() {
 }
 
 
-function toggleDropdown(event) {
-  var dropdownContent = event.target.nextElementSibling;
-  dropdownContent.classList.toggle("show");
-}
+  function toggleDropdown(event) {
+            var dropdownContent = event.target.nextElementSibling;
+            dropdownContent.classList.toggle("show");
 
-// Close the dropdown if the user clicks outside of it
-function toggleDropdown(event) {
-  var dropdownContent = event.target.nextElementSibling;
-  dropdownContent.classList.toggle("show");
+            var dropdowns = document.getElementsByClassName("custom-dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown !== event.target.nextElementSibling && openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
 
-  var dropdowns = document.getElementsByClassName("custom-dropdown-content");
-  for (var i = 0; i < dropdowns.length; i++) {
-    var openDropdown = dropdowns[i];
-    if (openDropdown !== event.target.nextElementSibling && openDropdown.classList.contains('show')) {
-      openDropdown.classList.remove('show');
-    }
-  }
-}
+        window.addEventListener('click', function (event) {
+            if (!event.target.matches('.custom-dropdown-button') && event.target.type !== 'text' && event.target.id !== 'each-label') {
+                var dropdowns = document.getElementsByClassName("custom-dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        });
 
-window.addEventListener('click', function (event) {
-  if (!event.target.matches('.custom-dropdown-button') && event.target.type !== 'text') {
-    var dropdowns = document.getElementsByClassName("custom-dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
+$(document).ready(function () {
+  $('.custom-dropdown').each(function () {
+    const customDropdown = $(this);
+    const input = customDropdown.find('#label-name');
+    const labels = customDropdown.find('.each-label');
+
+    input.on('input', function (e) {
+      const val = e.target.value.toUpperCase();
+
+      labels.each(function () {
+        const label = $(this);
+        const labelName = label.find("input[type='submit']").val().toUpperCase();
+
+        if (labelName.includes(val)) {
+          label.show();
+        } else {
+          label.hide();
+        }
+      });
+    });
+  });
 });

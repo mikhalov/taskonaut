@@ -27,7 +27,7 @@
   border-radius: 4px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   left: 0;
-  /* Align the dropdown content to the left */
+
 }
 
 .custom-dropdown-content a {
@@ -52,8 +52,14 @@
 }
 
 .input-container {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.exist-labels {
+    max-height: 200px;
+    overflow: auto;
 }
 
 input[name="labelName"] {
@@ -70,3 +76,33 @@ input[name="labelName"] {
   background: transparent;
   cursor: pointer;
 }
+
+.dropdown-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    padding: 8px 16px;
+}
+#search-input {
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+

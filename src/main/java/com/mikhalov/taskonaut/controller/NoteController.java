@@ -1,7 +1,7 @@
 package com.mikhalov.taskonaut.controller;
 
+import com.mikhalov.taskonaut.dto.LabelDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
-import com.mikhalov.taskonaut.dto.NotebookDTO;
 import com.mikhalov.taskonaut.service.NotesManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,12 @@ public class NoteController {
     public ModelAndView getAllNotes(ModelAndView modelAndView) {
         log.info("getting all");
         List<NoteDTO> notes = notesManageService.getAllNotes();
-        List<NotebookDTO> labels = notesManageService.getAllLabels();
+        List<LabelDTO> labels = notesManageService.getAllLabels();
         modelAndView.addObject("labels", labels);
         modelAndView.addObject("note", new NoteDTO());
-        modelAndView.addObject("label", new NotebookDTO());
+        modelAndView.addObject("label", new LabelDTO());
         modelAndView.addObject("notes", notes);
+
         return modelAndView;
     }
 
@@ -47,6 +48,7 @@ public class NoteController {
         NoteDTO note = notesManageService.getNoteById(id);
         modelAndView.addObject("note", note);
         modelAndView.setViewName("fragments/form-fragment");
+
         return modelAndView;
     }
 
@@ -55,6 +57,7 @@ public class NoteController {
     public RedirectView updateNote(@ModelAttribute NoteDTO noteDTO) {
         log.info("updating note {}", noteDTO);
         notesManageService.updateNote(noteDTO);
+
         return new RedirectView("/notes");
     }
 
@@ -62,6 +65,7 @@ public class NoteController {
     public RedirectView deleteNote(@PathVariable String id) {
         log.info("deleting note {}id", id);
         notesManageService.deleteNote(id);
+
         return new RedirectView("/notes");
     }
 }

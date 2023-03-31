@@ -1,10 +1,10 @@
 package com.mikhalov.taskonaut.service;
 
 import com.mikhalov.taskonaut.dto.NoteDTO;
-import com.mikhalov.taskonaut.dto.NotebookDTO;
+import com.mikhalov.taskonaut.dto.LabelDTO;
 import com.mikhalov.taskonaut.mapper.NoteManageMapper;
+import com.mikhalov.taskonaut.model.Label;
 import com.mikhalov.taskonaut.model.Note;
-import com.mikhalov.taskonaut.model.Notebook;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class NotesManageService {
 
     private final NoteService noteService;
-    private final NotebookService notebookService;
+    private final LabelService labelService;
     private final NoteManageMapper noteManageMapper;
 
     public void createNote(NoteDTO noteDTO) {
@@ -40,15 +40,27 @@ public class NotesManageService {
         return noteManageMapper.toNoteDTOList(noteService.getAllNotes());
     }
 
-    public void createNotebook(NotebookDTO labelDTO, String noteId) {
-        Notebook label = notebookService.createNotebook(noteManageMapper.toLabel(labelDTO));
-        Note note = noteService.getNoteById(noteId);
-        note.setNotebook(label);
-        noteService.updateNote(note);
-
+    public void createLabel(LabelDTO labelDTO, String noteId) {
+        Label label = labelService.createLabel(noteManageMapper.toLabel(labelDTO));
+        addNoteToLabel(noteId, label);
     }
 
-    public List<NotebookDTO> getAllLabels() {
-        return noteManageMapper.toNotebookDTOList(notebookService.getAllLabels());
+    public void addNoteToLabel(String noteId, String labelId) {
+        Label label = labelService.getById(labelId);
+        addNoteToLabel(noteId, label);
+    }
+
+    private void addNoteToLabel(String noteId, Label label) {
+        Note note = noteService.getNoteById(noteId);
+        note.setLabel(label);
+        noteService.updateNote(note);
+    }
+
+    public List<LabelDTO> getAllLabels() {
+        return noteManageMapper.toLabelDTOList(labelService.getAllLabels());
+    }
+
+    public List<NoteDTO> getAllNotesByLabelName(String labelName) {
+        return noteManageMapper.toNoteDTOList(noteService.getAllByLabelName(labelName));
     }
 }

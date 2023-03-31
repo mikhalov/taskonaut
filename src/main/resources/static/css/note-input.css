@@ -6,6 +6,8 @@
 }
 
 .note-wrapper {
+  max-height: 400px;
+  overflow: auto;
   width: 60vw;
   min-height: 40px;
   box-sizing: border-box;

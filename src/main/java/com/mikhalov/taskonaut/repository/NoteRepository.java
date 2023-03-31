@@ -10,5 +10,6 @@ import java.util.List;
 public interface NoteRepository extends JpaRepository<Note, String> {
 
     List<Note> findAllByOrderByLastModifiedDateDesc();
+    List<Note> findByLabelNameOrderByLastModifiedDateDesc(String labelName);
 
 }

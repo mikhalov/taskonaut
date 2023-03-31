@@ -1,8 +1,7 @@
 package com.mikhalov.taskonaut.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,23 +11,28 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Notebook {
+@ToString
+public class Label {
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "notebook_id")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "label_id")
     private String id;
+    @Column(unique = true, nullable = false)
+
     private String name;
-    @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "label", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Note> notes = new ArrayList<>();
 
     public void addNote(Note note) {
         notes.add(note);
-        note.setNotebook(this);
+        note.setLabel(this);
     }
 
     public void removeNote(Note note) {
         notes.remove(note);
-        note.setNotebook(null);
+        note.setLabel(null);
     }
 
 }

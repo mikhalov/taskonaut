@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="container-fluid mt-3" th:fragment="notes-grid">
+    <div class="notes-grid">
+
+        <th:block th:each="note : ${notes}">
+            <div th:replace="fragments/note-card :: note-card(note=${note})"></div>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class NotebookDTO {
+public class LabelDTO {
     private String id;
     private String name;
 }

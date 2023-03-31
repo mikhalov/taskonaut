@@ -11,5 +11,5 @@ public class NoteDTO {
     private String id;
     private String title;
     private String content;
-    private NotebookDTO notebookDTO;
+    private LabelDTO labelDTO;
 }

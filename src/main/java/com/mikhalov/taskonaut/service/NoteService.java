@@ -27,11 +27,17 @@ public class NoteService {
     }
 
     public Note getNoteById(String id) {
-        return noteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Note not found with id: " + id));
+        return noteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Note not found with id: " + id));
     }
 
     public List<Note> getAllNotes() {
         return noteRepository.findAllByOrderByLastModifiedDateDesc();
     }
+
+    public List<Note> getAllByLabelName(String labelName) {
+        return noteRepository.findByLabelNameOrderByLastModifiedDateDesc(labelName);
+    }
+
 }
 
