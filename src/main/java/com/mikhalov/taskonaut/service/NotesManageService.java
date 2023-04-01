@@ -1,7 +1,7 @@
 package com.mikhalov.taskonaut.service;
 
-import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.dto.LabelDTO;
+import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.mapper.NoteManageMapper;
 import com.mikhalov.taskonaut.model.Label;
 import com.mikhalov.taskonaut.model.Note;
@@ -41,8 +41,13 @@ public class NotesManageService {
     }
 
     public void createLabel(LabelDTO labelDTO, String noteId) {
-        Label label = labelService.createLabel(noteManageMapper.toLabel(labelDTO));
-        addNoteToLabel(noteId, label);
+        labelService.isLabelAlreadyExist(labelDTO.getName())
+                .ifPresentOrElse(
+                        label -> addNoteToLabel(noteId, label),
+                        () -> {
+                            Label label = labelService.createLabel(noteManageMapper.toLabel(labelDTO));
+                            addNoteToLabel(noteId, label);
+                        });
     }
 
     public void addNoteToLabel(String noteId, String labelId) {

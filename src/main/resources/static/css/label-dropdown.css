@@ -10,11 +10,13 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: white;
-  /* Make the text white */
+  color: #f5f5f5;
 }
 
-.custom-dropdown-content {
+.custom-dropdown-content,
+ .dropdown-menu{
+  min-width: 200px;
+  max-width: 200px;
   display: none;
   position: absolute;
   z-index: 1000;
@@ -22,29 +24,11 @@
   margin: 0;
   list-style: none;
   text-align: left;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-color: #202124;
+  border-radius: 5px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.375);
   left: 0;
 
-}
-
-.custom-dropdown-content a {
-  display: block;
-  padding: 5px 10px;
-  clear: both;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #333;
-  white-space: nowrap;
-}
-
-.custom-dropdown-content a:hover,
-.custom-dropdown-content a:focus {
-  color: #fff;
-  background-color: #007bff;
-  text-decoration: none;
 }
 
 .show {
@@ -66,43 +50,49 @@ input[name="labelName"] {
   padding-right: 60px;
 }
 
-.input-submit {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  height: 100%;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
 
-.dropdown-item {
-    position: relative;
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    border-bottom: 1px solid #eee;
-}
-
-.dropdown-item:last-child {
-    border-bottom: none;
-}
-
-input[type="submit"] {
+input[type="submit"],
+ .input-submit,
+  .dropdown-item{
+ background-color: transparent;
+    color: #f5f5f5;
     display: block;
     width: 100%;
     border: none;
     background: transparent;
     cursor: pointer;
     text-align: left;
-    padding: 8px 16px;
+    padding: 3px 3px;
 }
-#search-input {
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
-  box-sizing: border-box;
+
+
+input[type="submit"]:hover,
+.input-submit:hover,
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+  color: #000;
+  border: 1px solid #000;
+}
+
+ #label-name {
+ background-color: transparent;
+    color: #f5f5f5;
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: text;
+    text-align: left;
+    padding: 3px 3px;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu.show {
+  display: block;
 }
 

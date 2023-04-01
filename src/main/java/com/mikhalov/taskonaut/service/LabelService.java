@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,10 @@ public class LabelService {
 
     public List<Label> getAllLabels() {
         return labelRepository.findAll();
+    }
+
+    public Optional<Label> isLabelAlreadyExist(String name) {
+        return labelRepository.findByName(name);
     }
 
     public Label getById(String id) {

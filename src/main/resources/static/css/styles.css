@@ -24,6 +24,12 @@ body {
     color: #f5f5f5;
 }
 
+.custom-dropdown-content,
+.dropdown-menu {
+  position: absolute;
+  bottom: calc(100% ); /* adjust the value to fit your design */
+}
+
 .card {
     border-radius: 7px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
