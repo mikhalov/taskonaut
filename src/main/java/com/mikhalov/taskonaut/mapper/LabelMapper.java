@@ -2,11 +2,12 @@ package com.mikhalov.taskonaut.mapper;
 
 import com.mikhalov.taskonaut.dto.LabelDTO;
 import com.mikhalov.taskonaut.model.Label;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
-//@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring")
 public interface LabelMapper {
 
     @Mapping(target = "notes", ignore = true)
@@ -14,5 +15,4 @@ public interface LabelMapper {
 
     LabelDTO toLabelDTO(Label label);
 
-    List<LabelDTO> toLabelDTOList(List<Label> notes);
 }

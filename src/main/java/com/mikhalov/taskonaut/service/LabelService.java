@@ -1,6 +1,10 @@
 package com.mikhalov.taskonaut.service;
 
+import com.mikhalov.taskonaut.dto.LabelDTO;
+import com.mikhalov.taskonaut.dto.NoteDTO;
+import com.mikhalov.taskonaut.mapper.LabelMapper;
 import com.mikhalov.taskonaut.model.Label;
+import com.mikhalov.taskonaut.model.Note;
 import com.mikhalov.taskonaut.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,17 +18,34 @@ import java.util.Optional;
 public class LabelService {
 
     private final LabelRepository labelRepository;
+    private final NoteService noteService;
+    private final LabelMapper labelMapper;
 
-    public Label createLabel(Label label) {
-        System.out.println(label);
-        return labelRepository.save(label);
+    public void createLabel(LabelDTO labelDTO, String noteId) {
+        Label label = getLabelByName(labelDTO.getName())
+                .orElseGet(() -> labelRepository.save(labelMapper.toLabel(labelDTO)));
+
+        addNoteToLabel(noteId, label);
     }
 
-    public List<Label> getAllLabels() {
-        return labelRepository.findAll();
+    public void addNoteToLabel(String noteId, String labelId) {
+        Label label = getById(labelId);
+        addNoteToLabel(noteId, label);
     }
 
-    public Optional<Label> isLabelAlreadyExist(String name) {
+    private void addNoteToLabel(String noteId, Label label) {
+        Note note = noteService.getNoteById(noteId);
+        note.setLabel(label);
+        noteService.updateNote(note);
+    }
+
+    public List<LabelDTO> getAllLabels() {
+        return labelRepository.findAll()
+                .stream()
+                .map(labelMapper::toLabelDTO)
+                .toList();
+    }
+    public Optional<Label> getLabelByName(String name) {
         return labelRepository.findByName(name);
     }
 
@@ -33,4 +54,7 @@ public class LabelService {
                 .orElseThrow(() -> new EntityNotFoundException("Label not found with id: " + id));
     }
 
+    public List<NoteDTO> getAllNotesByLabelName(String name) {
+        return noteService.getAllByLabelName(name);
+    }
 }

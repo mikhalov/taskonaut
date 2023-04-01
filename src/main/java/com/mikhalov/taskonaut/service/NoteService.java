@@ -1,5 +1,7 @@
 package com.mikhalov.taskonaut.service;
 
+import com.mikhalov.taskonaut.dto.NoteDTO;
+import com.mikhalov.taskonaut.mapper.NoteMapper;
 import com.mikhalov.taskonaut.model.Note;
 import com.mikhalov.taskonaut.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +15,17 @@ import java.util.List;
 public class NoteService {
 
     private final NoteRepository noteRepository;
+    private final NoteMapper noteMapper;
 
-    public void createNote(Note note) {
-        noteRepository.save(note);
+    public void createNote(NoteDTO noteDTO) {
+        noteRepository.save(noteMapper.toNote(noteDTO));
+    }
+
+
+    public void updateNote(NoteDTO noteDTO) {
+        Note note = getNoteById(noteDTO.getId());
+        noteMapper.updateNote(noteDTO, note);
+        updateNote(note);
     }
 
     public void updateNote(Note note) {
@@ -31,12 +41,22 @@ public class NoteService {
                 .orElseThrow(() -> new EntityNotFoundException("Note not found with id: " + id));
     }
 
-    public List<Note> getAllNotes() {
-        return noteRepository.findAllByOrderByLastModifiedDateDesc();
+    public NoteDTO getNoteDTOById(String id) {
+        return noteMapper.toNoteDTO(getNoteById(id));
     }
 
-    public List<Note> getAllByLabelName(String labelName) {
-        return noteRepository.findByLabelNameOrderByLastModifiedDateDesc(labelName);
+    public List<NoteDTO> getAllNotes() {
+        return noteRepository.findAllByOrderByLastModifiedDateDesc()
+                .stream()
+                .map(noteMapper::toNoteDTO)
+                .toList();
+    }
+
+    public List<NoteDTO> getAllByLabelName(String labelName) {
+        return noteRepository.findByLabelNameOrderByLastModifiedDateDesc(labelName)
+                .stream()
+                .map(noteMapper::toNoteDTO)
+                .toList();
     }
 
 }

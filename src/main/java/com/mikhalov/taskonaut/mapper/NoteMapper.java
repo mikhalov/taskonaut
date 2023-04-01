@@ -2,12 +2,14 @@ package com.mikhalov.taskonaut.mapper;
 
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.model.Note;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-//@Mapper(componentModel = "spring", uses = {LabelMapper.class}, imports = {LocalDateTime.class})
+@Mapper(componentModel = "spring", uses = {LabelMapper.class}, imports = {LocalDateTime.class})
 public interface NoteMapper {
 
 
@@ -18,9 +20,7 @@ public interface NoteMapper {
 
 
     @Mapping(source = "label", target = "labelDTO")
-    NoteDTO toNoteData(Note note);
-
-    List<NoteDTO> toNoteDTOList(List<Note> notes);
+    NoteDTO toNoteDTO(Note note);
 
     @Mapping(source = "labelDTO", target = "label")
     @Mapping(
