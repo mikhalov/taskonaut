@@ -1,38 +1,38 @@
 .custom-dropdown {
-  position: relative;
-  display: inline-block;
-  user-select: none;
-  cursor: pointer;
+    position: relative;
+    display: inline-block;
+    user-select: none;
+    cursor: pointer;
 }
 
 .custom-dropdown-button {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #f5f5f5;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #f5f5f5;
 }
 
 .custom-dropdown-content,
- .dropdown-menu{
-  min-width: 200px;
-  max-width: 200px;
-  display: none;
-  position: absolute;
-  z-index: 1000;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  text-align: left;
-  background-color: #202124;
-  border-radius: 5px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.375);
-  left: 0;
+.dropdown-menu {
+    min-width: 200px;
+    max-width: 200px;
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: left;
+    background-color: #202124;
+    border-radius: 5px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.375);
+    left: 0;
 
 }
 
 .show {
-  display: block;
+    display: block;
 }
 
 .input-container {
@@ -47,14 +47,13 @@
 }
 
 input[name="labelName"] {
-  padding-right: 60px;
+    padding-right: 60px;
 }
 
 
 input[type="submit"],
- .input-submit,
-  .dropdown-item{
- background-color: transparent;
+.input-submit,
+.dropdown-item {
     color: #f5f5f5;
     display: block;
     width: 100%;
@@ -69,13 +68,10 @@ input[type="submit"],
 input[type="submit"]:hover,
 .input-submit:hover,
 .dropdown-item:hover {
-  background-color: #f5f5f5;
-  color: #000;
-  border: 1px solid #000;
+    background-color: #5A5A5A;
 }
 
- #label-name {
- background-color: transparent;
+#label-name {
     color: #f5f5f5;
     display: block;
     width: 100%;
@@ -88,11 +84,11 @@ input[type="submit"]:hover,
 
 
 .dropdown {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 .dropdown-menu.show {
-  display: block;
+    display: block;
 }
 

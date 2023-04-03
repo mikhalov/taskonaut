@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {LabelMapper.class}, imports = {LocalDateTime.class})
 public interface NoteMapper {

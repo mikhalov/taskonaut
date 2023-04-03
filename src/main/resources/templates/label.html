@@ -2,34 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <title th:text="${label.name}"></title>
+    <meta charset="UTF-8">
+    <title th:text="${#httpServletRequest.getAttribute('name')}"></title>
 
-  <head th:insert="layout :: head"></head>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/three-dots.css}">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/note-input.css}">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/label-dropdown.css}">
-  <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
-  <script th:src="@{/js/mansory-init.js}" defer></script>
+    <head th:insert="layout :: head"></head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/three-dots.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/note-input.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/label-dropdown.css}">
+    <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
+    <script th:src="@{/js/mansory-init.js}" defer></script>
+    <script th:src="@{/js/side-bar.js}" async></script>
 </head>
 
 <body onload="initMasonry();">
 <header th:insert="layout :: header"></header>
 
-<div class="note-container">
-  <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
-    <div class="note-wrapper" id="note-wrapper">
-      <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
-      <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
+<div class="main-content">
+    <div class="note-container">
+        <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
+            <div class="note-wrapper" id="note-wrapper">
+                <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
+                <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
+            </div>
+        </form>
     </div>
-  </form>
+
+    <div th:replace="fragments/notes-grid :: notes-grid"></div>
 </div>
 
-<div th:replace="fragments/notes-grid :: notes-grid"></div>
-
 <div id="editModal" class="modal hidden">
-  <div class="modal-content">
-  </div>
+    <div class="modal-content">
+    </div>
 </div>
 <script th:src="@{/js/edit-modal.js}"></script>
 <script th:src="@{/js/card-footer-menu.js}"></script>

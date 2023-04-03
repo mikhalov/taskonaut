@@ -2,11 +2,14 @@
   width: 100%;
   text-align: center;
   display: inline-block;
+}
+
+#note-form {
   margin: 32px auto 16px auto;
 }
 
 .note-wrapper {
-  max-height: 400px;
+  max-width: 600px;
   overflow: auto;
   width: 60vw;
   min-height: 40px;
