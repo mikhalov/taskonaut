@@ -48,6 +48,7 @@ public class NoteController {
     public ModelAndView getNoteById(@PathVariable String id, ModelAndView modelAndView) {
         log.info("getting by {}id", id);
         NoteDTO note = noteService.getNoteDTOById(id);
+        log.info("label {}", note.getLabelDTO());
         modelAndView.addObject("note", note);
         modelAndView.setViewName("fragments/form-fragment");
 

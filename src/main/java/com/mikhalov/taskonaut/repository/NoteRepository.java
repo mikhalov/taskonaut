@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface NoteRepository extends JpaRepository<Note, String> {
 
-    List<Note> findAllByOrderByLastModifiedDateDesc();
-    List<Note> findByLabelNameOrderByLastModifiedDateDesc(String labelName);
+    List<Note> findAllByUserEmailOrderByLastModifiedDateDesc(String email);
+
 
 }
