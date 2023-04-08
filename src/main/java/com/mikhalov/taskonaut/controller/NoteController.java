@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoteController {
 
-    private static final RedirectView MAIN_NOTES_PAGE_VIEW = new RedirectView("/notes");
+    private static final String MAIN_NOTES_PAGE_VIEW = "/notes";
     private final NoteService noteService;
     private final LabelService labelService;
 
@@ -36,18 +36,32 @@ public class NoteController {
         return modelAndView;
     }
 
+    @GetMapping("/search")
+    public ModelAndView searchNotes(@RequestParam("keyword") String keyword, ModelAndView modelAndView) {
+        log.info("search foundNotes by title and content that contains '{}'", keyword);
+        List<NoteDTO> foundNotes = noteService.searchNotes(keyword);
+        List<LabelDTO> labels = labelService.getAllLabels();
+        modelAndView.addObject("labels", labels);
+        modelAndView.addObject("note", new NoteDTO());
+        modelAndView.addObject("label", new LabelDTO());
+        modelAndView.addObject("notes", foundNotes);
+        modelAndView.setViewName(MAIN_NOTES_PAGE_VIEW);
+        return modelAndView;
+    }
+
 
     @PostMapping()
     public RedirectView createNote(@ModelAttribute NoteDTO noteDTO) {
         log.info("creating new note {}", noteDTO);
         noteService.createNote(noteDTO);
-        return MAIN_NOTES_PAGE_VIEW;
+        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
     }
 
     @GetMapping("/{id}")
     public ModelAndView getNoteById(@PathVariable String id, ModelAndView modelAndView) {
         log.info("getting by {}id", id);
         NoteDTO note = noteService.getNoteDTOById(id);
+        log.info("label {}", note.getLabelDTO());
         modelAndView.addObject("note", note);
         modelAndView.setViewName("fragments/form-fragment");
 
@@ -60,7 +74,7 @@ public class NoteController {
         log.info("updating note {}", noteDTO);
         noteService.updateNote(noteDTO);
 
-        return MAIN_NOTES_PAGE_VIEW;
+        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
     }
 
     @DeleteMapping("/{id}")
@@ -68,6 +82,6 @@ public class NoteController {
         log.info("deleting note {}id", id);
         noteService.deleteNote(id);
 
-        return MAIN_NOTES_PAGE_VIEW;
+        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
     }
 }

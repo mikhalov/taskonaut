@@ -7,6 +7,7 @@
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 </head>
 
 <body>
@@ -16,11 +17,11 @@
         <nav class="custom-navbar custom-navbar-border">
             <div class="nav-content">
                 <a class="nav-link" href="#" id="labels-btn">Sidebar</a>
-                <ul class="nav-items">
-
-
-                </ul>
             </div>
+            <form class="nav-search" action="/notes/search" th:method="get">
+                <input type="text" name="keyword" placeholder="Search">
+                <button type="submit" class="btn btn-dark">Search</button>
+            </form>
         </nav>
         <div class="sidebar" id="sidebar">
             <a class="nav-link" th:href="@{/notes}">Notes</a>
