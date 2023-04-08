@@ -4,20 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Taskonaut</title>
-
-    <head th:insert="layout :: head"></head>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/three-dots.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/note-input.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/label-dropdown.css}">
-    <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
-    <script th:src="@{/js/masonry.js}" defer></script>
-    <script th:src="@{/js/nav-and-sidebar.js}" async></script>
+    <th:block th:insert="layout :: head"></th:block>
 </head>
 
 <body onload="initMasonry();">
-<header th:insert="layout :: header"></header>
+<th:block th:insert="layout :: header"></th:block>
 
-<div class="main-content">
+<main class="main-content">
     <div class="note-container">
         <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
             <div class="note-wrapper" id="note-wrapper">
@@ -27,9 +20,8 @@
         </form>
     </div>
 
-
     <div th:replace="fragments/notes-grid :: notes-grid"></div>
-</div>
+</main>
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
     </div>
@@ -38,5 +30,4 @@
 <script th:src="@{/js/card-footer-menu.js}"></script>
 <script th:src="@{/js/new-note-creation.js}"></script>
 </body>
-
 </html>
