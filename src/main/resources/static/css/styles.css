@@ -1,20 +1,17 @@
-/* Style the scrollbar for all elements */
+
 *::-webkit-scrollbar {
   width: 6px;
 }
 
-/* Style the scrollbar track for all elements */
 *::-webkit-scrollbar-track {
   background: #202124;
 }
 
-/* Style the scrollbar thumb for all elements */
 *::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 3px;
 }
 
-/* Style the scrollbar thumb when hovering for all elements */
 *::-webkit-scrollbar-thumb:hover {
   background: #aaa;
 }
@@ -26,7 +23,7 @@ body {
 }
 
 .main-content-shifted {
-    margin-left: 250px; /* Width of the sidebar */
+    margin-left: 250px;
     width: calc(100% - 250px);
     transition: margin-left 0.3s ease, width 0.3s ease;
 }
@@ -53,10 +50,10 @@ body {
     right: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     background-color: #202124;
     height: 56px;
-    padding: 0 16px;
+    padding: 0 8px;
     z-index: 2;
 }
 
@@ -68,26 +65,44 @@ body {
     border-bottom: 1px solid #f5f5f5;
 }
 
+
+
+.nav-search {
+    margin: 0 10px;
+    height: 45px;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-search input[type="text"] {
+    height: 100%;
+    border-radius: 5px;
+    background-color: #5a5a5a;
+    border: 1px solid #202124;
+    margin-right: 10px;
+    width: 500px;
+}
+.nav-search input[type="text"]::placeholder {
+    color: #f5f5f5;
+}
+
+.nav-search input[type="text"]:focus {
+    outline: none;
+}
+
 .nav-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     height: 56px;
-    padding: 0 16px;
-}
-
-.nav-items {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-.nav-item {
-    margin-left: 16px;
+    margin: 0 10px;
 }
 
 .nav-link {
+    display: inline-block;
     text-decoration: none;
     color: #f5f5f5;
 }
@@ -100,10 +115,10 @@ body {
 .sidebar {
     position: fixed;
     width: 250px;
-    height: calc(100% - 57px); /* Adjust the height by subtracting the navbar height */
+    height: calc(100% - 57px);
     background-color: #202124;
     z-index: 1;
-    top: 57px; /* Set the top position to the navbar height */
+    top: 57px;
     left: -250px;
     overflow-x: hidden;
     transition: left 0.3s ease;
@@ -125,7 +140,7 @@ body {
 .custom-dropdown-content,
 .dropdown-menu {
   position: absolute;
-  bottom: calc(100% ); /* adjust the value to fit your design */
+  bottom: calc(100% );
 }
 
 .card {

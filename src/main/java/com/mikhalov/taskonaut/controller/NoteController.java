@@ -38,8 +38,13 @@ public class NoteController {
 
     @GetMapping("/search")
     public ModelAndView searchNotes(@RequestParam("keyword") String keyword, ModelAndView modelAndView) {
-        List<NoteDTO> notes = noteService.searchNotes(keyword);
-        modelAndView.addObject("notes", notes);
+        log.info("search foundNotes by title and content that contains '{}'", keyword);
+        List<NoteDTO> foundNotes = noteService.searchNotes(keyword);
+        List<LabelDTO> labels = labelService.getAllLabels();
+        modelAndView.addObject("labels", labels);
+        modelAndView.addObject("note", new NoteDTO());
+        modelAndView.addObject("label", new LabelDTO());
+        modelAndView.addObject("notes", foundNotes);
         modelAndView.setViewName(MAIN_NOTES_PAGE_VIEW);
         return modelAndView;
     }

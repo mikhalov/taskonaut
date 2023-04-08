@@ -12,23 +12,22 @@
 
 <body>
 <header>
-    <div id="app">
-        <div class="overlay" id="overlay" @click="closeSidebar" :style="overlayStyle"></div>
-        <div class="nav-sidebar-container">
-            <nav class="custom-navbar" :class="navbarClass">
-                <div class="nav-content">
-                    <a class="nav-link" href="#" id="labels-btn" @click="toggleSidebar">Sidebar</a>
-                    <ul class="nav-items">
-                        <!-- Add your nav items here -->
-                    </ul>
-                </div>
-            </nav>
-            <div class="sidebar" id="sidebar" :style="sidebarStyle">
-                <a class="nav-link" th:href="@{/notes}">Notes</a>
-                <th:block th:each="label : ${labels}">
-                    <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"></a>
-                </th:block>
+    <div class="overlay" id="overlay"></div>
+    <div class="nav-sidebar-container">
+        <nav class="custom-navbar custom-navbar-border">
+            <div class="nav-content">
+                <a class="nav-link" href="#" id="labels-btn">Sidebar</a>
             </div>
+            <form class="nav-search" action="/notes/search" th:method="get">
+                <input type="text" name="keyword" placeholder="Search">
+                <button type="submit" class="btn btn-dark">Search</button>
+            </form>
+        </nav>
+        <div class="sidebar" id="sidebar">
+            <a class="nav-link" th:href="@{/notes}">Notes</a>
+            <th:block th:each="label : ${labels}">
+                <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"> </a>
+            </th:block>
         </div>
     </div>
 
