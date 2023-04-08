@@ -16,7 +16,6 @@ public interface NoteRepository extends JpaRepository<Note, String> {
             FROM Note n
             WHERE (LOWER(n.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
             OR (LOWER(n.content) LIKE LOWER(CONCAT('%', :keyword, '%')))
-            OR (LOWER(n.label.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
             AND LOWER(n.user.email) = LOWER(:userEmail)
             ORDER BY n.id DESC""")
     List<Note> findByTitleOrContentContainingAndUserEmailOrderByDesc(@Param("keyword") String keyword, @Param("userEmail") String userEmail);
