@@ -3,6 +3,7 @@ package com.mikhalov.taskonaut.service;
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.mapper.NoteMapper;
 import com.mikhalov.taskonaut.model.Note;
+import com.mikhalov.taskonaut.model.User;
 import com.mikhalov.taskonaut.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,15 @@ import java.util.List;
 public class NoteService {
 
     private final NoteRepository noteRepository;
+    private final UserService userService;
     private final NoteMapper noteMapper;
 
     public void createNote(NoteDTO noteDTO) {
-        noteRepository.save(noteMapper.toNote(noteDTO));
+        Note note = noteMapper.toNote(noteDTO);
+        User user = userService.getCurrentUser();
+        note.setUser(user);
+
+        noteRepository.save(note);
     }
 
 
@@ -46,18 +52,21 @@ public class NoteService {
     }
 
     public List<NoteDTO> getAllNotes() {
-        return noteRepository.findAllByOrderByLastModifiedDateDesc()
-                .stream()
-                .map(noteMapper::toNoteDTO)
-                .toList();
+        String userEmail = userService.getCurrentUserUsername();
+        List<Note> notes = noteRepository
+                .findAllByUserEmailOrderByLastModifiedDateDesc(userEmail);
+
+        return noteMapper.toNoteDTOList(notes);
     }
 
-    public List<NoteDTO> getAllByLabelName(String labelName) {
-        return noteRepository.findByLabelNameOrderByLastModifiedDateDesc(labelName)
-                .stream()
-                .map(noteMapper::toNoteDTO)
-                .toList();
+    public List<NoteDTO> searchNotes(String keyword) {
+        String userEmail = userService.getCurrentUserUsername();
+        List<Note> notes = noteRepository
+                .findByTitleOrContentContainingAndUserEmailOrderByDesc(keyword, userEmail);
+
+        return noteMapper.toNoteDTOList(notes);
     }
+
 
 }
 

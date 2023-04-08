@@ -11,17 +11,16 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class Label {
-    @Id
-    @GeneratedValue(generator = "UUID")
+    @Id @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "label_id")
     private String id;
-    @Column(unique = true, nullable = false)
 
+    @Column(nullable = false)
     private String name;
-    @OneToMany(mappedBy = "label", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "label", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     private List<Note> notes = new ArrayList<>();
 
@@ -34,5 +33,9 @@ public class Label {
         notes.remove(note);
         note.setLabel(null);
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

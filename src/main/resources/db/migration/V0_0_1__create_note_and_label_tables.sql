@@ -10,7 +10,6 @@ CREATE TABLE note (
 
 CREATE TABLE label (
     label_id VARCHAR(255) NOT NULL,
-    name VARCHAR(50) UNIQUE NOT NULL,
     PRIMARY KEY (label_id)
 );
 
