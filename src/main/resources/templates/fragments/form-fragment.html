@@ -10,7 +10,6 @@
         <div class="modal-body">
             <input type="text" id="note-title-modal" th:field="*{title}" placeholder="Title" required>
             <textarea id="note-content-modal" rows="10" th:field="*{content}" placeholder="Content" required></textarea>
-            <input type="hidden" th:field="*{labelDTO}">
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-dark">Save</button>

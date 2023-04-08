@@ -53,12 +53,18 @@ public class NoteService {
 
     public List<NoteDTO> getAllNotes() {
         String userEmail = userService.getCurrentUserUsername();
+        List<Note> notes = noteRepository
+                .findAllByUserEmailOrderByLastModifiedDateDesc(userEmail);
 
-        return noteRepository
-                .findAllByUserEmailOrderByLastModifiedDateDesc(userEmail)
-                .stream()
-                .map(noteMapper::toNoteDTO)
-                .toList();
+        return noteMapper.toNoteDTOList(notes);
+    }
+
+    public List<NoteDTO> searchNotes(String keyword) {
+        String userEmail = userService.getCurrentUserUsername();
+        List<Note> notes = noteRepository
+                .findByTitleOrContentContainingAndUserEmailOrderByDesc(keyword, userEmail);
+
+        return noteMapper.toNoteDTOList(notes);
     }
 
 

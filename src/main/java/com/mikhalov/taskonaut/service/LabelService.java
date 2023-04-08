@@ -6,6 +6,7 @@ import com.mikhalov.taskonaut.mapper.LabelMapper;
 import com.mikhalov.taskonaut.mapper.NoteMapper;
 import com.mikhalov.taskonaut.model.Label;
 import com.mikhalov.taskonaut.model.Note;
+import com.mikhalov.taskonaut.model.User;
 import com.mikhalov.taskonaut.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,25 +26,31 @@ public class LabelService {
     private final NoteMapper noteMapper;
 
     public void createLabel(LabelDTO labelDTO, String noteId) {
-        Label label = getLabelByNameForCurrentUser(labelDTO.getName(), userService.getCurrentUserUsername())
+        Note note = noteService.getNoteById(noteId);
+        User user = userService.getCurrentUser();
+        String email = user.getEmail();
+        if (!note.getUser().getEmail().equals(email)) {
+            throw new SecurityException("The current user does not have permission to add a label to this note");
+        }
+
+        Label label = getLabelByNameForCurrentUser(labelDTO.getName(), email)
                 .orElseGet(() -> {
                     Label newLabel = labelMapper.toLabel(labelDTO);
-                    newLabel.setUser(userService.getCurrentUser());
-                    return labelRepository.save(newLabel);
+                    newLabel.setUser(user);
+                    return newLabel;
                 });
-
-        addNoteToLabel(noteId, label);
+        addNoteToLabel(note, label);
     }
 
     public void addNoteToLabel(String noteId, String labelId) {
+        Note note = noteService.getNoteById(noteId);
         Label label = getById(labelId);
-        addNoteToLabel(noteId, label);
+        addNoteToLabel(note, label);
     }
 
-    private void addNoteToLabel(String noteId, Label label) {
-        Note note = noteService.getNoteById(noteId);
-        note.setLabel(label);
-        noteService.updateNote(note);
+    private void addNoteToLabel(Note note, Label label) {
+        label.addNote(note);
+        labelRepository.save(label);
     }
 
     public List<LabelDTO> getAllLabels() {
@@ -54,6 +61,7 @@ public class LabelService {
                 .map(labelMapper::toLabelDTO)
                 .toList();
     }
+
     public Optional<Label> getLabelByNameForCurrentUser(String name, String userEmail) {
         return labelRepository.findByNameAndUserEmail(name, userEmail);
     }

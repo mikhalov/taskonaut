@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoteController {
 
-    private static final RedirectView MAIN_NOTES_PAGE_VIEW = new RedirectView("/notes");
+    private static final String MAIN_NOTES_PAGE_VIEW = "/notes";
     private final NoteService noteService;
     private final LabelService labelService;
 
@@ -36,12 +36,20 @@ public class NoteController {
         return modelAndView;
     }
 
+    @GetMapping("/search")
+    public ModelAndView searchNotes(@RequestParam("keyword") String keyword, ModelAndView modelAndView) {
+        List<NoteDTO> notes = noteService.searchNotes(keyword);
+        modelAndView.addObject("notes", notes);
+        modelAndView.setViewName(MAIN_NOTES_PAGE_VIEW);
+        return modelAndView;
+    }
+
 
     @PostMapping()
     public RedirectView createNote(@ModelAttribute NoteDTO noteDTO) {
         log.info("creating new note {}", noteDTO);
         noteService.createNote(noteDTO);
-        return MAIN_NOTES_PAGE_VIEW;
+        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
     }
 
     @GetMapping("/{id}")
@@ -61,7 +69,7 @@ public class NoteController {
         log.info("updating note {}", noteDTO);
         noteService.updateNote(noteDTO);
 
-        return MAIN_NOTES_PAGE_VIEW;
+        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
     }
 
     @DeleteMapping("/{id}")
@@ -69,6 +77,6 @@ public class NoteController {
         log.info("deleting note {}id", id);
         noteService.deleteNote(id);
 
-        return MAIN_NOTES_PAGE_VIEW;
+        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
     }
 }

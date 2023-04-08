@@ -1,51 +1,51 @@
-document.getElementById("labels-btn").addEventListener("click", function () {
-    toggleSidebar();
-});
-
-document.getElementById("overlay").addEventListener("click", function () {
-    closeSidebar();
-});
-
-function toggleSidebar() {
-    let sidebar = document.getElementById("sidebar");
-    let overlay = document.getElementById("overlay");
-    let mainContent = document.querySelector(".main-content");
-    let currentLeft = sidebar.style.left;
-
-    if (currentLeft === "0px") {
-        sidebar.style.left = "-250px";
-        overlay.style.display = "none";
-        mainContent.classList.remove("main-content-shifted");
-    } else {
-        sidebar.style.left = "0px";
-        overlay.style.display = "block";
-        mainContent.classList.add("main-content-shifted");
+new Vue({
+    el: '#app',
+    data: {
+        sidebarOpen: false,
+        navbarShadow: false
+    },
+    computed: {
+        sidebarStyle() {
+            return {
+                left: this.sidebarOpen ? '0px' : '-250px'
+            };
+        },
+        overlayStyle() {
+            return {
+                display: this.sidebarOpen ? 'block' : 'none'
+            };
+        },
+        mainContentClass() {
+            return {
+                'main-content': true,
+                'main-content-shifted': this.sidebarOpen
+            };
+        },
+        navbarClass() {
+            return {
+                'custom-navbar': true,
+                'custom-navbar-shadow': this.navbarShadow,
+                'custom-navbar-border': !this.navbarShadow
+            };
+        }
+    },
+    methods: {
+        toggleSidebar() {
+            this.sidebarOpen = !this.sidebarOpen;
+            setTimeout(initMasonry, 350);
+        },
+        closeSidebar() {
+            this.sidebarOpen = false;
+            setTimeout(initMasonry, 350);
+        },
+        handleScroll() {
+            this.navbarShadow = window.scrollY > 0;
+        }
+    },
+    mounted() {
+        window.addEventListener('scroll', this.handleScroll);
+    },
+    beforeDestroy() {
+        window.removeEventListener('scroll', this.handleScroll);
     }
-    // Call initMasonry after the sidebar's state has changed
-    setTimeout(initMasonry, 350);
-
-}
-
-function closeSidebar() {
-    let sidebar = document.getElementById("sidebar");
-    let overlay = document.getElementById("overlay");
-    let mainContent = document.querySelector(".main-content");
-    sidebar.style.left = "-250px";
-    overlay.style.display = "none";
-    mainContent.classList.remove("main-content-shifted");
-    // Call initMasonry after the sidebar's state has changed
-    setTimeout(initMasonry, 350);
-}
-
-
-window.addEventListener("scroll", function() {
-    let navbar = document.querySelector(".custom-navbar");
-    if (window.scrollY > 0) {
-        navbar.classList.add("custom-navbar-shadow");
-        navbar.classList.remove("custom-navbar-border");
-    } else {
-        navbar.classList.remove("custom-navbar-shadow");
-        navbar.classList.add("custom-navbar-border");
-    }
 });
-

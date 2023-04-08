@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {LabelMapper.class}, imports = {LocalDateTime.class})
 public interface NoteMapper {
@@ -21,12 +22,18 @@ public interface NoteMapper {
     @Mapping(source = "label", target = "labelDTO")
     NoteDTO toNoteDTO(Note note);
 
-    @Mapping(source = "labelDTO", target = "label")
+    @Mapping(target = "label", ignore = true)
     @Mapping(
             target = "lastModifiedDate",
             expression = "java(LocalDateTime.now())"
     )
     @Mapping(target = "creationDate", ignore = true)
     void updateNote(NoteDTO noteDTO, @MappingTarget Note note);
+
+    default List<NoteDTO> toNoteDTOList(List<Note> notes) {
+        return notes.stream()
+                .map(this::toNoteDTO)
+                .toList();
+    }
 
 }

@@ -33,7 +33,7 @@ public class Note {
     @JoinColumn(name = "label_id")
     private Label label;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

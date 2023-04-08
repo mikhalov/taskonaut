@@ -35,24 +35,26 @@ public class LabelController {
             @RequestParam(name = "labelId") String labelId,
             @RequestParam(name = "noteId") String noteId
     ) {
+        log.info("adding note '{}' to label '{}'", noteId, labelId);
         labelService.addNoteToLabel(noteId, labelId);
 
         return new RedirectView("/notes");
     }
 
-    @GetMapping
-    public ModelAndView getAllLabels(ModelAndView modelAndView) {
-        log.info("get all labels");
-        List<LabelDTO> labels = labelService.getAllLabels();
-        modelAndView.addObject(LABELS_LITERAL, labels);
-        modelAndView.addObject("note", new NoteDTO());
-        modelAndView.setViewName(LABELS_LITERAL);
-
-        return modelAndView;
-    }
+//    @GetMapping
+//    public ModelAndView getAllLabels(ModelAndView modelAndView) {
+//        log.info("get all labels");
+//        List<LabelDTO> labels = labelService.getAllLabels();
+//        modelAndView.addObject(LABELS_LITERAL, labels);
+//        modelAndView.addObject("note", new NoteDTO());
+//        modelAndView.setViewName(LABELS_LITERAL);
+//
+//        return modelAndView;
+//    }
 
     @GetMapping("/{name}")
     public ModelAndView getLabelByName(@PathVariable String name, ModelAndView modelAndView) {
+        log.info("getting label '{}'", name);
         List<NoteDTO> notesByLabelName = labelService.getAllNotesByLabelName(name);
         List<LabelDTO> labels = labelService.getAllLabels();
         modelAndView.addObject(LABELS_LITERAL, labels);

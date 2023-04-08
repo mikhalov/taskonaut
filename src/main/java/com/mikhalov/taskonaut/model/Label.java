@@ -20,7 +20,7 @@ public class Label {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "label")
+    @OneToMany(mappedBy = "label", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     private List<Note> notes = new ArrayList<>();
 
