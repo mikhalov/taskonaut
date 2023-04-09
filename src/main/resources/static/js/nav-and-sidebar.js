@@ -43,24 +43,3 @@ $(document).ready(function() {
         }
     });
 });
-
-function centerNavSearch() {
-    const $customNavbar = $("#custom-navbar");
-    const $navContent = $("#nav-content");
-    const $navSearch = $("#nav-search");
-
-    const navbarWidth = $customNavbar.width();
-    const navContentWidth = $navContent.width();
-    const navSearchWidth = $navSearch.width();
-
-    const remainingSpace = navbarWidth - navContentWidth;
-    const navSearchMargin = (remainingSpace - navSearchWidth) / 2;
-
-    $navSearch.css("marginLeft", navContentWidth + navSearchMargin);
-}
-
-// Call the function to center the nav-search when the page loads
-$(document).ready(centerNavSearch);
-
-// Call the function to center the nav-search when the window is resized
-$(window).on("resize", centerNavSearch);

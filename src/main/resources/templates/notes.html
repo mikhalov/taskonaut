@@ -8,26 +8,6 @@
 </head>
 
 <body onload="initMasonry();">
-<th:block th:insert="layout :: header"></th:block>
-
-<main class="main-content">
-    <div class="note-container">
-        <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
-            <div class="note-wrapper" id="note-wrapper">
-                <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
-                <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
-            </div>
-        </form>
-    </div>
-
-    <div th:replace="fragments/notes-grid :: notes-grid"></div>
-</main>
-<div id="editModal" class="modal hidden">
-    <div class="modal-content">
-    </div>
-</div>
-<script th:src="@{/js/edit-modal.js}"></script>
-<script th:src="@{/js/card-footer-menu.js}"></script>
-<script th:src="@{/js/new-note-creation.js}"></script>
+    <th:block th:replace="fragments/notes-body-fragment :: bodyFragment"></th:block>
 </body>
 </html>
