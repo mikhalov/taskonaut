@@ -5,6 +5,7 @@
   var noteTitle = document.getElementById('note-title');
 
   var quill = null;
+  var quillTitle = null;
 
   function createQuillEditor() {
     if (quill === null) {
@@ -43,6 +44,16 @@
     }
   }
 
+  function createQuillTitleEditor() {
+    if (quillTitle === null) {
+      quillTitle = initializeQuillTitleEditor('#note-title-editor');
+
+      quillTitle.on('text-change', function () {
+        noteTitle.value = quillTitle.root.innerHTML;
+      });
+    }
+  }
+
   function hideToolbar() {
     const toolbar = document.querySelector('#toolbar-container');
     if (toolbar) {
@@ -61,6 +72,9 @@
     e.stopPropagation();
     if (!quill) {
       createQuillEditor();
+    }
+    if (!quillTitle) {
+      createQuillTitleEditor();
     }
     if (!noteWrapper.classList.contains('active')) {
       document.getElementById('editor').classList.remove('hidden');

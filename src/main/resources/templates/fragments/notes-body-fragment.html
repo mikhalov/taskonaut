@@ -11,7 +11,8 @@
       <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
         <div class="note-wrapper" id="note-wrapper">
           <div id="toolbar-container" class="toolbar-hidden"></div>
-          <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
+          <div id="note-title-editor" class="title-container"></div>
+          <input type="hidden" id="note-title" th:field="*{title}" required>
           <div id="editor" class="hidden"></div>
           <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
         </div>
@@ -23,9 +24,7 @@
       </div>
     </div>
   </main>
-  <script th:src="@{/js/edit-modal.js}" defer></script>
-  <script th:src="@{/js/card-footer-menu.js}" defer></script>
-  <script th:src="@{/js/new-note-creation.js}" defer></script>
+  <th:block th:replace="layout :: footer"></th:block>
 </div>
 </body>
 </html>

@@ -6,15 +6,17 @@
 </head>
 
 <body>
-    <form th:action="@{/notes/{id}(id=${note.id})}" th:object="${note}" th:method="put">
-        <div class="modal-body">
-            <input type="text" id="note-title-modal" th:field="*{title}" placeholder="Title" required>
-            <textarea id="note-content-modal" rows="10" th:field="*{content}" placeholder="Content" required></textarea>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-dark">Save</button>
-        </div>
-    </form>
+<form th:action="@{/notes/{id}(id=${note.id})}" th:object="${note}" th:method="put">
+    <div class="modal-body">
+        <input type="hidden" id="note-title-hidden" th:field="*{title}">
+        <div id="note-title-modal"></div>
+        <input type="hidden" id="note-content-hidden" th:field="*{content}">
+        <div id="note-content-modal"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark">Save</button>
+    </div>
+</form>
 </body>
 
 </html>

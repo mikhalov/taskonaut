@@ -1,4 +1,5 @@
 let mouseDownOutsideModal = false;
+let quill;
 
 async function openModal(noteId) {
     const modal = document.getElementById("editModal");
@@ -17,6 +18,7 @@ async function openModal(noteId) {
         mouseDownOutsideModal = false;
     });
 
+
     try {
         const response = await fetch('/notes/' + noteId);
         if (response.ok) {
@@ -25,6 +27,29 @@ async function openModal(noteId) {
             modal.classList.remove("hidden");
 
             const form = modalContent.querySelector("form");
+
+            // Initialize Quill editor for note content
+            const quillOptions = {
+                theme: 'snow'
+            };
+            quill = new Quill('#note-content-modal', quillOptions);
+
+            // Set Quill editor content
+            const noteContentHidden = document.getElementById('note-content-hidden');
+            quill.root.innerHTML = noteContentHidden.value;
+
+            const quillTitle = initializeQuillTitleEditor('#note-title-modal');
+
+            // Set Quill editor title
+            const noteTitleHidden = document.getElementById('note-title-hidden');
+            quillTitle.root.innerHTML = noteTitleHidden.value;
+
+            // Update the hidden input fields with the Quill editor content and title when the form is submitted
+            form.addEventListener('submit', function (event) {
+                noteContentHidden.value = quill.root.innerHTML;
+                noteTitleHidden.value = quillTitle.root.innerHTML;
+            });
+
         } else {
             console.error('Error fetching the form:', response.status);
         }
