@@ -59,9 +59,9 @@ public class JwtUtil {
         return authCookie;
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public boolean validateToken(String token, String username) {
+        final String usernameFromToken = getUsernameFromToken(token);
+        return (usernameFromToken.equals(username) && !isTokenExpired(token));
     }
 
     public String getUsernameFromToken(String token) {

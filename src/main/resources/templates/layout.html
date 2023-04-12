@@ -31,12 +31,12 @@
                     <img th:src="@{/image/notes_icon.svg}" id="notes-icon">
                     <h3 id="nav-title"></h3>
                 </div>
-                <form class="nav-search nav-content-center" action="/notes/search" th:method="get">
-                    <div id="magnifier-btn" onclick="this.parentNode.submit()">
+                <form id="navSearch" class="nav-search nav-content-center" action="/notes/search" th:method="get">
+                    <div id="magnifier-btn" >
                         <img th:src="@{/image/magnifier-icon.svg}">
                     </div>
                     <input type="text" name="keyword" placeholder="Search" autocomplete="off">
-                    <div id="magnifier-btn1" onclick="window.location.href='/notes'">
+                    <div id="magnifier-btn1">
                         <img th:src="@{/image/cancel_icon.svg}">
                     </div>
                 </form>

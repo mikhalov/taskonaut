@@ -74,6 +74,7 @@ function createQuillNoteEditor(selector) {
         [{ 'color': [] }, { 'background': [] }],
         [{ 'font': [] }],
         [{ 'align': [] }],
+        ['image'],
         ['clean']
     ];
 
@@ -83,7 +84,70 @@ function createQuillNoteEditor(selector) {
         modules: {
             toolbar: {
                 container: defaultToolbarOptions,
+                handlers: {
+                    'image': imageHandler,
+                },
             },
         },
     });
 }
+
+function imageHandler() {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (file) {
+            // Upload the image and get the URL for the uploaded image
+            uploadImage(file).then((imageUrl) => {
+                // Insert the image URL in the editor using the custom image blot
+                const range = this.quill.getSelection(true);
+                this.quill.insertEmbed(range.index, 'customImage', { url: imageUrl });
+                this.quill.setSelection(range.index + 1);
+            });
+        }
+    });
+}
+async function uploadImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=d63a64ad9c8727a5e12fded220139bff`, {
+        method: 'POST',
+        body: formData,
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data.data.url; // Get the image URL from the response
+    } else {
+        throw new Error('Failed to upload image');
+    }
+}
+
+const BlockEmbed = Quill.import('blots/block/embed');
+
+class CustomImageBlot extends BlockEmbed {
+    static create(value) {
+        let node = super.create(value);
+        node.setAttribute('src', value.url);
+        node.setAttribute('width', '200');
+        // node.setAttribute('height', '200');
+        node.addEventListener('click', () => {
+            window.open(value.url, '_blank');
+        });
+        return node;
+    }
+
+    static value(node) {
+        return { url: node.getAttribute('src') };
+    }
+}
+
+CustomImageBlot.blotName = 'customImage';
+CustomImageBlot.tagName = 'img';
+
+Quill.register(CustomImageBlot);
