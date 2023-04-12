@@ -29,11 +29,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .antMatchers("/login", "/login/auth").permitAll()
+                        .antMatchers("/login", "/login/auth", "/login/signup").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAthFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin().loginPage("/login").and()
+                .logout(config -> config.deleteCookies("Authorization"))
                 .userDetailsService(userDetailsService)
                 .csrf().disable()
                 .build();

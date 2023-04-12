@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <title>Body Fragment</title>
 </head>
@@ -10,9 +10,9 @@
     <div class="note-container">
       <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
         <div class="note-wrapper" id="note-wrapper">
-          <div id="toolbar-container" class="toolbar-hidden"></div>
           <div id="note-title-editor" class="title-container"></div>
           <input type="hidden" id="note-title" th:field="*{title}" required>
+          <div id="toolbar-container" class="toolbar-hidden"></div>
           <div id="editor" class="hidden"></div>
           <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
         </div>

@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
@@ -41,6 +43,20 @@ public class JwtUtil {
                 .setExpiration(Date.from(Instant.now().plusMillis(expiration)))
                 .signWith(getSecretKey())
                 .compact();
+    }
+
+    public Cookie createAuthCookie(String jwtToken) {
+        Instant expirationInstant = getExpirationDateFromToken(jwtToken);
+        long jwtExpirationDuration = Duration
+                .between(Instant.now(), expirationInstant)
+                .getSeconds();
+
+        Cookie authCookie = new Cookie("Authorization", jwtToken);
+        authCookie.setHttpOnly(true);
+        authCookie.setMaxAge((int) jwtExpirationDuration);
+        authCookie.setPath("/");
+
+        return authCookie;
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

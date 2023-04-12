@@ -10,7 +10,7 @@
 <div class="grid-item" th:fragment="note-card (note)">
     <div class="card">
         <div class="card-body" th:attr="note-id=${note.id}" onclick="openModal(this.getAttribute('note-id'))">
-            <h5 class="card-title" th:utext="${note.title}"></h5>
+            <div class="card-title" th:utext="${note.title}"></div>
             <p class="card-text" th:utext="${note.content}"></p>
         </div>
         <div class="card-footer">
@@ -43,7 +43,7 @@
             <div class="dropdown">
                 <div class="three-dots-container" id="menu-button" data-toggle="dropdown" aria-haspopup="true"
                      aria-expanded="false">
-                    <img th:src="@{/image/three_dots_vertical_menu_icon_184615.png}" class="three_dots_vertical_menu">
+                    <img th:src="@{/image/three_dots_vertical_menu_icon.png}" class="three_dots_vertical_menu">
                 </div>
                 <div class="dropdown-menu" aria-labelledby="menu-button">
 

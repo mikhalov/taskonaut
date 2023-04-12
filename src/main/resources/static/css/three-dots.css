@@ -7,7 +7,7 @@
 }
 
 .three-dots-container:hover {
-  border: 1px solid #f5f5f5;
+  background-color: #5A5A5A;
   border-radius: 35%;
 }
 

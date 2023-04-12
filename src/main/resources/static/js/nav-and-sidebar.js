@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $("#labels-btn").on("click", toggleSidebar);
+    $("#sidebar-btn").on("click", toggleSidebar);
     $("#overlay").on("click", closeSidebar);
 
     function toggleSidebar() {

@@ -28,11 +28,7 @@ async function openModal(noteId) {
 
             const form = modalContent.querySelector("form");
 
-            // Initialize Quill editor for note content
-            const quillOptions = {
-                theme: 'snow'
-            };
-            quill = new Quill('#note-content-modal', quillOptions);
+            quill = createQuillNoteEditor('#note-content-modal');
 
             // Set Quill editor content
             const noteContentHidden = document.getElementById('note-content-hidden');

@@ -1,23 +1,32 @@
 package com.mikhalov.taskonaut.service;
 
+import com.mikhalov.taskonaut.dto.UserRegistrationDTO;
+import com.mikhalov.taskonaut.mapper.UserMapper;
 import com.mikhalov.taskonaut.model.User;
+import com.mikhalov.taskonaut.model.enums.UserRole;
 import com.mikhalov.taskonaut.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public void createUser(User user) {
-        String encoded = String.format("{bcrypt}%s", new BCryptPasswordEncoder().encode(user.getPassword()));
+    public void createUser(UserRegistrationDTO userRegistrationDTO) {
+        User user = userMapper.toUser(userRegistrationDTO);
+        user.setRole(UserRole.USER);
+        String encoded = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(encoded);
         userRepository.save(user);
+        log.info("user created '{}'", user.getEmail());
     }
 
     public User getCurrentUser() {

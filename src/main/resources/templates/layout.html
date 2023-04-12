@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <title th:text="${title}">Title</title>
@@ -13,6 +13,12 @@
     <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
     <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
     <script th:src="@{/js/masonry.js}" async></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var title = document.querySelector('title').innerText;
+            document.getElementById('nav-title').innerText = title;
+        });
+    </script>
 </head>
 <body>
 <header>
@@ -20,12 +26,24 @@
     <div class="nav-sidebar-container">
         <nav class="custom-navbar custom-navbar-border">
             <div class="nav-content">
-                <a class="nav-link" href="#" id="labels-btn">Sidebar</a>
+                <div class="nav-content-left">
+                    <img th:src="@{/image/menu_burger_icon.svg}" id="sidebar-btn">
+                    <img th:src="@{/image/notes_icon.svg}" id="notes-icon">
+                    <h3 id="nav-title"></h3>
+                </div>
+                <form class="nav-search nav-content-center" action="/notes/search" th:method="get">
+                    <div id="magnifier-btn" onclick="this.parentNode.submit()">
+                        <img th:src="@{/image/magnifier-icon.svg}">
+                    </div>
+                    <input type="text" name="keyword" placeholder="Search" autocomplete="off">
+                    <div id="magnifier-btn1" onclick="window.location.href='/notes'">
+                        <img th:src="@{/image/cancel_icon.svg}">
+                    </div>
+                </form>
+                <div class="nav-content-right">
+                    <button class="logout-btn" onclick="location.href='/logout'">Logout</button>
+                </div>
             </div>
-            <form class="nav-search" action="/notes/search" th:method="get">
-                <input type="text" name="keyword" placeholder="Search">
-                <button type="submit" class="btn btn-dark">Search</button>
-            </form>
         </nav>
         <div class="sidebar" id="sidebar">
             <a class="nav-link" th:href="@{/notes}">Notes</a>
