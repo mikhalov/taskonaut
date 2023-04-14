@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $("#sidebar-btn").on("click", toggleSidebar);
     $("#overlay").on("click", closeSidebar);
 
@@ -32,7 +32,7 @@ $(document).ready(function() {
         setTimeout(initMasonry, 350);
     }
 
-    $(window).on("scroll", function() {
+    $(window).on("scroll", function () {
         let $navbar = $(".custom-navbar");
         if ($(window).scrollTop() > 0) {
             $navbar.addClass("custom-navbar-shadow");
@@ -45,35 +45,22 @@ $(document).ready(function() {
 });
 
 $(document).ready(function () {
+    const currentUrl = new URL(window.location.href);
     const navSearch = $('#navSearch');
     const magnifierBtn = $('#magnifier-btn');
-    const magnifierBtn1 = $('#magnifier-btn1');
+    const magnifierBtn1 = $('#cancel-btn');
     const searchInput = navSearch.find('input[type="text"]');
 
-    // Retrieve the stored input value and set it
-    const storedInputValue = localStorage.getItem('searchInputValue');
-    if (storedInputValue) {
-        searchInput.val(storedInputValue);
-        localStorage.removeItem('searchInputValue'); // Clear the stored value
+    // Set the input value from the URL keyword parameter if it exists
+    const keyword = currentUrl.searchParams.get('keyword');
+    if (keyword) {
+        searchInput.val(keyword);
         navSearch.addClass('focused');
     }
 
     searchInput.on('focus', function () {
         navSearch.addClass('focused');
     });
-
-    // Store the input value before submitting the form
-    function storeInputValueAndSubmit(event) {
-        const inputValue = searchInput.val();
-
-        // Check if the input value is empty or contains only whitespace
-        if (!inputValue.trim()) {
-            event.preventDefault(); // Do not submit the form
-            return;
-        }
-
-        localStorage.setItem('searchInputValue', inputValue);
-    }
 
     // Attach the event listener to the magnifier-btn and the form's submit event
     magnifierBtn.on('mousedown', function (event) {
@@ -87,7 +74,15 @@ $(document).ready(function () {
         }
     });
 
-    navSearch.on('submit', storeInputValueAndSubmit);
+    navSearch.on('submit', function (event) {
+        const inputValue = searchInput.val();
+
+        // Check if the input value is empty or contains only whitespace
+        if (!inputValue.trim()) {
+            event.preventDefault(); // Do not submit the form
+
+        }
+    });
 
     magnifierBtn1.on('click', function (event) {
         event.preventDefault(); // Prevent form submission
@@ -103,4 +98,32 @@ $(document).ready(function () {
 
         navSearch.removeClass('focused');
     });
+});
+
+$(document).ready(function () {
+    const currentUrl = new URL(window.location.href);
+    const currentPage = currentUrl.pathname;
+    const sortForm = $('#sortForm');
+
+    if (sortForm.length && (currentPage === '/notes' || currentPage === '/notes/search' || currentPage.startsWith('/labels/'))) {
+        // Keep existing query parameters
+        let newActionUrl = currentUrl;
+
+        // Remove existing 'sort' and 'asc' parameters if they exist
+        newActionUrl.searchParams.delete('sort');
+        newActionUrl.searchParams.delete('asc');
+
+        // Iterate over preserved query parameters and append hidden input fields
+        for (const [key, value] of newActionUrl.searchParams.entries()) {
+            const preservedParam = $('<input>', {
+                type: 'hidden',
+                name: key,
+                value: value
+            });
+            sortForm.append(preservedParam);
+        }
+
+        // Set the new action attribute without any query parameters
+        sortForm.attr('action', currentPage);
+    }
 });

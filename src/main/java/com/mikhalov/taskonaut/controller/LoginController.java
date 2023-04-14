@@ -60,10 +60,7 @@ public class LoginController {
         try {
             userService.createUser(userRegistrationDTO);
 
-            return authentication(
-                    userRegistrationDTO,
-                    response
-            );
+            return authentication(userRegistrationDTO, response);
         } catch (DataIntegrityViolationException e) {
             log.info("Registration failed due to duplicate email.");
             bindingResult.rejectValue(

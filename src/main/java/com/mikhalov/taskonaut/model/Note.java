@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,8 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Note {
-    @Id
-    @GeneratedValue(generator = "UUID")
+    @Id @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "note_id")
     private String id;
@@ -24,16 +24,18 @@ public class Note {
     private String content;
 
     @Column(name = "creation_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate = LocalDateTime.now();
 
     @Column(name = "last_modified_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastModifiedDate = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "label_id")
     private Label label;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -55,7 +55,7 @@ body {
     background-color: #202124;
     height: 56px;
     padding: 0 8px;
-    z-index: 2;
+    z-index: 1000;
 }
 
 .custom-navbar-shadow {
@@ -87,7 +87,7 @@ body {
     flex-grow: 1;
 }
 
-#magnifier-btn, #magnifier-btn1 {
+#magnifier-btn, #cancel-btn {
     filter: invert(95%);
     margin: 3px 7px;
     height: 38px;
@@ -105,17 +105,17 @@ body {
     display: flex;
 }
 
-#magnifier-btn1 {
+#cancel-btn {
     display: none;
 }
 
 
-#magnifier-btn1:hover, #magnifier-btn:hover {
+#cancel-btn:hover, #magnifier-btn:hover {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 50%;
 }
 
-#magnifier-btn img, #magnifier-btn1 img {
+#magnifier-btn img, #cancel-btn img {
     height: 20px;
     width: 20px;
 }
@@ -139,26 +139,26 @@ body {
     background-color: #ffffff; /* Change background color to white */
 }
 
-.nav-search:focus-within #magnifier-btn1 {
+.nav-search:focus-within #cancel-btn {
     display: flex;
 }
-.nav-search.focused #magnifier-btn1 {
+.nav-search.focused #cancel-btn {
     display: flex;
 }
 
 .nav-search:not(.focused) #magnifier-btn:hover,
-.nav-search:not(.focused) #magnifier-btn1:hover {
+.nav-search:not(.focused) #cancel-btn:hover {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 50%;
 }
 
 .nav-search:focus-within #magnifier-btn img,
-.nav-search:focus-within #magnifier-btn1 img {
+.nav-search:focus-within #cancel-btn img {
     filter: invert(100%); /* Invert image colors */
 }
 
 .nav-search.focused #magnifier-btn:hover,
-.nav-search.focused #magnifier-btn1:hover {
+.nav-search.focused #cancel-btn:hover {
     background-color: rgba(100, 100, 100, 0.2);
     border-radius: 50%;
 }

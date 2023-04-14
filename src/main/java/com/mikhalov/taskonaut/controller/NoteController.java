@@ -1,9 +1,9 @@
 package com.mikhalov.taskonaut.controller;
 
-import com.mikhalov.taskonaut.dto.LabelDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
-import com.mikhalov.taskonaut.service.LabelService;
+import com.mikhalov.taskonaut.model.enums.NoteSortOption;
 import com.mikhalov.taskonaut.service.NoteService;
+import com.mikhalov.taskonaut.util.ModelAndViewUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,33 +20,36 @@ import java.util.List;
 public class NoteController {
 
     private static final String MAIN_NOTES_PAGE_VIEW = "/notes";
+    private final ModelAndViewUtil modelAndViewUtil;
     private final NoteService noteService;
-    private final LabelService labelService;
 
-    @GetMapping
-    public ModelAndView getAllNotes(ModelAndView modelAndView) {
-        log.info("getting all");
-        List<NoteDTO> notes = noteService.getAllNotes();
-        List<LabelDTO> labels = labelService.getAllLabels();
-        modelAndView.addObject("labels", labels);
-        modelAndView.addObject("note", new NoteDTO());
-        modelAndView.addObject("label", new LabelDTO());
-        modelAndView.addObject("notes", notes);
+    @GetMapping()
+    public ModelAndView getSortedNotes(@RequestParam(value = "sort", required = false) NoteSortOption sortBy,
+                                       @RequestParam(value = "asc", required = false) boolean ascending,
+                                       ModelAndView modelAndView) {
+        log.info("getting sorted notes by {}, {}",
+                sortBy, ascending ? "asc" : "desc");
+        List<NoteDTO> sortedNotes = noteService.getSortedNotes(sortBy, ascending);
+        log.info("successful done");
 
-        return modelAndView;
+        return modelAndViewUtil
+                .getMainModelAndView(modelAndView, sortedNotes, ascending, MAIN_NOTES_PAGE_VIEW);
     }
 
+
+
     @GetMapping("/search")
-    public ModelAndView searchNotes(@RequestParam("keyword") String keyword, ModelAndView modelAndView) {
-        log.info("search foundNotes by title and content that contains '{}'", keyword);
-        List<NoteDTO> foundNotes = noteService.searchNotes(keyword);
-        List<LabelDTO> labels = labelService.getAllLabels();
-        modelAndView.addObject("labels", labels);
-        modelAndView.addObject("note", new NoteDTO());
-        modelAndView.addObject("label", new LabelDTO());
-        modelAndView.addObject("notes", foundNotes);
-        modelAndView.setViewName(MAIN_NOTES_PAGE_VIEW);
-        return modelAndView;
+    public ModelAndView searchNotes(@RequestParam(value = "sort", required = false) NoteSortOption sortBy,
+                                    @RequestParam(value = "asc", required = false) boolean ascending,
+                                    @RequestParam("keyword") String keyword,
+                                    ModelAndView modelAndView) {
+        log.info("search foundNotes by title and content that contains '{}', sort by {} {}",
+                keyword, sortBy, ascending ? "asc" : "desc");
+        List<NoteDTO> foundNotes = noteService.searchNotesByKeywordAndSort(keyword, sortBy, ascending);
+        log.info("successful search");
+
+        return modelAndViewUtil
+                .getMainModelAndView(modelAndView, foundNotes, ascending, MAIN_NOTES_PAGE_VIEW);
     }
 
 

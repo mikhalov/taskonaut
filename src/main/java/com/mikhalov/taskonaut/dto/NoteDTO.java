@@ -8,8 +8,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class NoteDTO {
+
     private String id;
     private String title;
     private String content;
     private LabelDTO labelDTO;
+    private String lastModifiedAt;
+
 }

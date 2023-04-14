@@ -20,6 +20,7 @@ public interface NoteMapper {
 
 
     @Mapping(source = "label", target = "labelDTO")
+    @Mapping(source = "lastModifiedDate", target = "lastModifiedAt", dateFormat = "yyyy-MM-dd HH:mm:ss")
     NoteDTO toNoteDTO(Note note);
 
     @Mapping(target = "label", ignore = true)
