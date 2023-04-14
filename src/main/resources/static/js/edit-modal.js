@@ -1,7 +1,7 @@
 let mouseDownOutsideModal = false;
 let quill;
 
-async function openModal(noteId) {
+window.openModal = async function openModal(noteId) {
     const modal = document.getElementById("editModal");
     const modalContent = modal.querySelector(".modal-content");
 
@@ -18,7 +18,6 @@ async function openModal(noteId) {
         mouseDownOutsideModal = false;
     });
 
-
     try {
         const response = await fetch('/notes/' + noteId);
         if (response.ok) {
@@ -28,23 +27,16 @@ async function openModal(noteId) {
 
             const form = modalContent.querySelector("form");
 
-            quill = createQuillNoteEditor('#note-content-modal');
+            // Initialize SimpleMDE editor for note content
+            const simplemde = createSimpleMDEEditor('#note-content-modal');
 
-            // Set Quill editor content
-            const noteContentHidden = document.getElementById('note-content-hidden');
-            quill.root.innerHTML = noteContentHidden.value;
+            // Set SimpleMDE editor content
+            const noteContentTextarea = document.getElementById('note-content-modal');
+            simplemde.value(noteContentTextarea.value);
 
-            const quillTitle = initializeQuillTitleEditor('#note-title-modal');
-
-            // Set Quill editor title
-            const noteTitleHidden = document.getElementById('note-title-hidden');
-            quillTitle.root.innerHTML = noteTitleHidden.value;
-
-            // Update the hidden input fields with the Quill editor content and title when the form is submitted
-            form.addEventListener('submit', function (event) {
-                noteContentHidden.value = quill.root.innerHTML;
-                noteTitleHidden.value = quillTitle.root.innerHTML;
-            });
+            // Set input field title value
+            const noteTitleInput = document.getElementById('note-title-input');
+            noteTitleInput.value = noteTitleInput.value;
 
         } else {
             console.error('Error fetching the form:', response.status);
@@ -54,8 +46,8 @@ async function openModal(noteId) {
     }
 }
 
-
 function closeModal() {
     const modal = document.getElementById("editModal");
     modal.classList.add("hidden");
+
 }

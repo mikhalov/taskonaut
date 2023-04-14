@@ -336,8 +336,40 @@ body {
     margin-bottom: 20px;
 }
 
+.simplemde-container {
+    border: none;
+    border-radius: 0;
+    margin: 5px 0;
+    color: #f5f5f5;
+    width: 100%;
+    background: transparent;
+    overflow: auto;
+    resize: none;
+}
 
-#note-title-modal {
+.simplemde-container * {
+    max-width: 100%;
+    max-height: 97%;
+    overflow: auto;
+}
+
+.simplemde-container:focus {
+    outline: none;
+}
+
+.CodeMirror, .CodeMirror-scroll {
+    background-color: transparent !important;
+    border: 0 !important;
+    height: 320px !important;
+    color: #f5f5f5 !important;
+}
+
+.editor-toolbar {
+    border: 0 !important;
+}
+
+/* The following style is for the input field of the title */
+#note-title-input {
     height: 40px;
     overflow-y: visible;
     color: #f5f5f5;
@@ -346,10 +378,6 @@ body {
     outline: none;
     background: transparent;
     margin: 5px 0;
-}
-
-#note-title-modal .ql-editor {
-    overflow: hidden !important;
 }
 
 #note-content-modal {
@@ -364,11 +392,6 @@ body {
     resize: none;
 }
 
-#note-content-modal * {
-    max-width: 100%;
-    max-height: 97%;
-    overflow: auto;
-}
 
 #note-content-modal:focus {
     outline: none;
@@ -382,16 +405,21 @@ body {
     border-top: none;
 }
 
-
 .modal-content {
+    height: 80vh;
     background-color: #202124;
     margin: 10px;
     position: fixed;
-    width: 90%;
+    width: 80%;
     max-width: 835px;
     border-radius: 7px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 9999;
+}
+
+.modal-content form {
+    max-height: 100%;
+
 }
 
 .modal {
