@@ -4,67 +4,44 @@
     var noteForm = document.getElementById('note-form');
     var noteTitle = document.getElementById('note-title');
 
-    var quill = null;
-    var quillTitle = null;
+    function autoResize(textarea) {
+        var minHeight = parseInt(window.getComputedStyle(textarea).getPropertyValue('min-height'));
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.max(textarea.scrollHeight, minHeight) + 'px';
+    }
 
-    function createQuillEditor() {
-        if (quill === null) {
-            quill = createQuillNoteEditor('#editor');
-        }
+    function createNoteContent() {
+        var noteContent = document.createElement('textarea');
+        noteContent.id = 'note-content';
+        noteContent.rows = '1';
+        noteContent.placeholder = 'Write your note here...';
 
-        const toolbarContainer = document.getElementById('toolbar-container');
-        toolbarContainer.appendChild(quill.getModule('toolbar').container);
-
-        quill.on('text-change', function () {
-            hiddenNoteContent.value = quill.root.innerHTML;
+        noteContent.addEventListener('input', function () {
+            hiddenNoteContent.value = noteContent.value;
+            autoResize(noteContent);
         });
-    }
 
-    function createQuillTitleEditor() {
-        if (quillTitle === null) {
-            quillTitle = initializeQuillTitleEditor('#note-title-editor');
+        autoResize(noteContent);
 
-            quillTitle.on('text-change', function () {
-                noteTitle.value = quillTitle.root.innerHTML;
-            });
-        }
-    }
-
-    function hideToolbar() {
-        const toolbar = document.querySelector('#toolbar-container');
-        if (toolbar) {
-            toolbar.classList.add('toolbar-hidden');
-        }
-    }
-
-    function showToolbar() {
-        const toolbar = document.querySelector('#toolbar-container');
-        if (toolbar) {
-            toolbar.classList.remove('toolbar-hidden');
-        }
+        return noteContent;
     }
 
     noteWrapper.addEventListener('click', function (e) {
         e.stopPropagation();
-        if (!quill) {
-            createQuillEditor();
-        }
-        if (!quillTitle) {
-            createQuillTitleEditor();
-        }
-        if (!noteWrapper.classList.contains('active')) {
-            document.getElementById('editor').classList.remove('hidden');
+        if (!document.getElementById('note-content')) {
+            var noteContent = createNoteContent();
+            noteWrapper.appendChild(noteContent);
             noteWrapper.classList.add('active');
-            showToolbar(); // Make sure this line is present
         }
     });
 
     document.addEventListener('click', function (e) {
-        if (!noteWrapper.contains(e.target) && quill) {
-            hiddenNoteContent.value = quill.root.innerHTML;
-            document.getElementById('editor').classList.add('hidden');
+        if (!noteWrapper.contains(e.target) && document.getElementById('note-content')) {
+            var noteContent = document.getElementById('note-content');
+            hiddenNoteContent.value = noteContent.value;
             noteWrapper.classList.remove('active');
-            hideToolbar(); // Make sure this line is present
+            noteContent.parentNode.removeChild(noteContent);
+
 
             if (noteTitle.value.trim() !== '') {
                 noteForm.submit();

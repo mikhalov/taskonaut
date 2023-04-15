@@ -339,36 +339,41 @@ body {
 .simplemde-container {
     border: none;
     border-radius: 0;
-    margin: 5px 0;
+    margin: 0;
     color: #f5f5f5;
     width: 100%;
     background: transparent;
-    overflow: auto;
-    resize: none;
-}
-
-.simplemde-container * {
-    max-width: 100%;
-    max-height: 97%;
-    overflow: auto;
-}
-
-.simplemde-container:focus {
-    outline: none;
+    height: calc(80vh - 40px - 60px);
+    display: flex;
+    flex-direction: column;
 }
 
 .CodeMirror, .CodeMirror-scroll {
-    background-color: transparent !important;
+    background-color: #202124 !important;
     border: 0 !important;
-    height: 320px !important;
     color: #f5f5f5 !important;
+    flex-grow: 1;
+    overflow: hidden;
 }
 
-.editor-toolbar {
+.editor-toolbar,
+.editor-preview {
+    background-color: #202124 !important;
     border: 0 !important;
 }
 
-/* The following style is for the input field of the title */
+.editor-preview-side {
+    background-color: #202124 !important;
+    border-top: 0 !important;
+    border-left: 1px solid #dee2e6 !important;
+}
+
+.editor-toolbar a {
+    color: #5a5a5a !important;
+}
+
+
+
 #note-title-input {
     height: 40px;
     overflow-y: visible;
@@ -377,21 +382,19 @@ body {
     border: none;
     outline: none;
     background: transparent;
-    margin: 5px 0;
+    padding: 10px;
 }
 
 #note-content-modal {
-    height: 380px;
+    height: calc(80vh - 40px - 60px);
     border: none;
     border-radius: 0;
-    margin: 5px 0;
+    margin: 0;
     color: #f5f5f5;
     width: 100%;
     background: transparent;
-    overflow: auto;
     resize: none;
 }
-
 
 #note-content-modal:focus {
     outline: none;
@@ -399,10 +402,18 @@ body {
 
 .modal-body {
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 60px);
 }
 
 .modal-footer {
     border-top: none;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 15px;
 }
 
 .modal-content {
@@ -415,11 +426,14 @@ body {
     border-radius: 7px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 9999;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-content form {
-    max-height: 100%;
-
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .modal {

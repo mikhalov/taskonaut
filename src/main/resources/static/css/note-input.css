@@ -9,43 +9,24 @@
 }
 
 .note-wrapper {
-    max-width: 800px;
-    max-height: 600px;
-    overflow: visible;
+    max-width: 600px;
+    overflow: auto;
     width: 60vw;
     min-height: 40px;
     box-sizing: border-box;
     display: inline-block;
-    border: 2px solid #5a5a5a;
+    border: 1px solid #ccc;
+    padding: 10px;
     border-radius: 5px;
     cursor: text;
 }
 
-.toolbar-container {
-    position: relative;
-    overflow: visible;
-}
-
 #note-title {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    padding: 12px 15px;
     color: #f5f5f5;
     width: 100%;
     border: none;
     outline: none;
     background: transparent;
-}
-
-.ql-tooltip {
-    z-index: 9999;
-}
-
-#editor {
-    border: 0 ;
-    margin-bottom: 2px;
-    overflow: auto;
-    max-height: 450px;
 }
 
 #note-content {
@@ -55,28 +36,10 @@
     outline: none;
     background: transparent;
     display: none;
-    overflow: visible;
+    overflow: hidden;
     resize: none;
 }
 
 .note-wrapper.active #note-content {
     display: block;
-}
-
-
-.ql-toolbar.ql-snow {
-    border: 0 !important;
-}
-
-.ql-editor.ql-blank::before {
-    color: #5A5A5A !important;
-    font-style: normal !important;
-}
-
-.hidden {
-    display: none;
-}
-
-.toolbar-hidden {
-    display: none;
 }
