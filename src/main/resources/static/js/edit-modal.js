@@ -1,7 +1,6 @@
 let mouseDownOutsideModal = false;
-let quill;
 
-window.openModal = async function openModal(noteId) {
+async function openModal(noteId) {
     const modal = document.getElementById("editModal");
     const modalContent = modal.querySelector(".modal-content");
 
@@ -21,23 +20,10 @@ window.openModal = async function openModal(noteId) {
     try {
         const response = await fetch('/notes/' + noteId);
         if (response.ok) {
-            const formHtml = await response.text();
-            modalContent.innerHTML = formHtml;
+            modalContent.innerHTML = await response.text();
             modal.classList.remove("hidden");
 
             const form = modalContent.querySelector("form");
-
-            // Initialize SimpleMDE editor for note content
-            const simplemde = createSimpleMDEEditor('#note-content-modal');
-
-            // Set SimpleMDE editor content
-            const noteContentTextarea = document.getElementById('note-content-modal');
-            simplemde.value(noteContentTextarea.value);
-
-            // Set input field title value
-            const noteTitleInput = document.getElementById('note-title-input');
-            noteTitleInput.value = noteTitleInput.value;
-
         } else {
             console.error('Error fetching the form:', response.status);
         }
@@ -46,8 +32,8 @@ window.openModal = async function openModal(noteId) {
     }
 }
 
+
 function closeModal() {
     const modal = document.getElementById("editModal");
     modal.classList.add("hidden");
-
 }

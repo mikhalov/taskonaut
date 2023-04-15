@@ -1,27 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <title>Body Fragment</title>
+    <title>Body Fragment</title>
 </head>
 <body>
 <div th:fragment="bodyFragment">
-  <th:block th:replace="layout :: header"></th:block>
-  <main class="main-content">
-    <div class="note-container">
-      <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
-        <div class="note-wrapper" id="note-wrapper">
-          <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
-          <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
+    <th:block th:replace="layout :: header"></th:block>
+    <main class="main-content">
+        <div class="nav-wrapper">
+            <nav aria-label="Page navigation">
+                <ul class="nav-pagination">
+                    <li th:class="${currentPage == 0} ? 'nav-page-item disabled' : 'nav-page-item'">
+                        <a class="nav-page-link"
+                           th:href="${currentPage == 0} ? '#' : @{/notes(page=${currentPage - 1}, sort=${noteSortingDTO.currentSorting}, asc=${noteSortingDTO.ascending})}"
+                           aria-label="Previous"
+                           th:tabindex="${currentPage == 0} ? '-1' : '0'"
+                           th:aria-disabled="${currentPage == 0} ? 'true' : 'false'">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:if="${currentPage > 0}" class="nav-page-item">
+                        <a class="nav-page-link"
+                           th:href="@{/notes(page=${currentPage - 1}, sort=${noteSortingDTO.currentSorting}, asc=${noteSortingDTO.ascending})}"
+                           th:text="${currentPage}"></a>
+                    </li>
+                    <li class="nav-page-item active">
+                        <a class="nav-page-link"
+                           th:href="@{/notes(page=${currentPage}, sort=${noteSortingDTO.currentSorting}, asc=${noteSortingDTO.ascending})}"
+                           th:text="${currentPage + 1}"></a>
+                    </li>
+                    <li th:if="${currentPage + 1 < totalPages}" class="nav-page-item">
+                        <a class="nav-page-link"
+                           th:href="@{/notes(page=${currentPage + 1}, sort=${noteSortingDTO.currentSorting}, asc=${noteSortingDTO.ascending})}"
+                           th:text="${currentPage + 2}"></a>
+                    </li>
+                    <li th:class="${currentPage + 1 == totalPages} ? 'nav-page-item disabled' : 'nav-page-item'">
+                        <a class="nav-page-link"
+                           th:href="${currentPage + 1 == totalPages} ? '#' : @{/notes(page=${currentPage + 1}, sort=${noteSortingDTO.currentSorting}, asc=${noteSortingDTO.ascending})}"
+                           aria-label="Next"
+                           th:tabindex="${currentPage + 1 == totalPages} ? '-1' : '0'"
+                           th:aria-disabled="${currentPage + 1 == totalPages} ? 'true' : 'false'">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <form id="sortForm" class="sort-form" action="/notes" th:method="get">
+                <div class="custom-select">
+                    <div class="select-selected" onclick="toggleSelect(event)">
+                        <label class="select-wrapper-label">
+                            <span class="sorting-select-label">Sorting by:</span>
+                            <span class="sorting-value" th:text="${noteSortingDTO.currentSorting.value}"></span>
+                        </label>
+                        <input type="hidden" th:name="sort" th:value="${noteSortingDTO.currentSorting}"/>
+                        <div class="select-items select-hide">
+                            <div th:each="sortOption : ${noteSortingDTO.sortOptions}"
+                                 th:data-value="${sortOption}"
+                                 onclick="selectOption(this)"
+                                 th:text="${sortOption.value}"></div>
+                        </div>
+                    </div>
+                </div>
+                <label class="custom-label">
+                    <input id="sortCheckbox" type="checkbox" name="asc" th:checked="${noteSortingDTO.ascending}"
+                           onchange="updateCheckboxLabel()"/>
+                    <span id="checkboxLabel" class="custom-checkbox"></span>
+                </label>
+                <button class="transparent-back-btn" type="submit">Sort</button>
+            </form>
         </div>
-      </form>
-    </div>
-    <div th:replace="fragments/notes-grid :: notes-grid"></div>
-    <div id="editModal" class="modal hidden">
-      <div class="modal-content">
-      </div>
-    </div>
-  </main>
-  <th:block th:replace="layout :: footer"></th:block>
+        <div class="note-container">
+            <form id="note-form" th:action="@{/notes}" th:object="${note}" th:method="post">
+                <div class="note-wrapper" id="note-wrapper">
+                    <input type="text" id="note-title" th:field="*{title}" placeholder="Note Title" required>
+                    <input type="hidden" contenteditable="true" id="hidden-note-content" th:field="*{content}">
+                </div>
+            </form>
+        </div>
+        <div th:replace="fragments/notes-grid :: notes-grid"></div>
+        <div id="editModal" class="modal hidden">
+            <div class="modal-content">
+            </div>
+        </div>
+    </main>
+    <th:block th:replace="layout :: footer"></th:block>
 </div>
 </body>
 </html>

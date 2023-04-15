@@ -3,17 +3,20 @@
 
 <head>
     <title th:text="${title}">Title</title>
+    <link rel="icon" th:href="@{/image/notes_icon.svg}" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/three-dots.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/note-input.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/label-dropdown.css}">
-    <link rel="stylesheet" href="https://cdn.rawgit.com/CoffeePerry/simplemde-theme-bootstrap-dark/master/dist/simplemde-theme-bootstrap-dark.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.rawgit.com/CoffeePerry/simplemde-theme-bootstrap-dark/master/dist/simplemde-theme-bootstrap-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
     <script th:src="@{/js/masonry.js}" async></script>
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('nav-title').innerText = document.querySelector('title').innerText;
         });
     </script>
@@ -30,7 +33,7 @@
                     <h3 id="nav-title"></h3>
                 </div>
                 <form id="navSearch" class="nav-search nav-content-center" action="/notes/search" th:method="get">
-                    <div id="magnifier-btn" >
+                    <div id="magnifier-btn">
                         <img th:src="@{/image/magnifier-icon.svg}">
                     </div>
                     <input type="text" name="keyword" placeholder="Search" autocomplete="off">
@@ -39,27 +42,14 @@
                     </div>
                 </form>
                 <div class="nav-content-right">
-                    <button class="logout-btn" onclick="location.href='/logout'">Logout</button>
+                    <button class="transparent-back-btn" onclick="location.href='/logout'">Logout</button>
                 </div>
             </div>
         </nav>
         <div class="sidebar" id="sidebar">
             <a class="nav-link" th:href="@{/notes}">Notes</a>
-            <form id="sortForm" class="sort-form" action="/notes" th:method="get">
-                <label>Sorting by: <br>
-                    <select name="sort">
-                        <option th:each="sortOption : ${noteSortingDTO.sortOptions}"
-                                th:value="${sortOption}"
-                                th:text="${sortOption}">
-                        </option>
-                    </select>
-                </label>
-                <label>
-                    <input type="checkbox" name="asc" th:checked="${noteSortingDTO.ascending}" />
-                    <span>Ascending</span>
-                </label>
-                <button type="submit">Sort</button>
-            </form>
+
+
             <th:block th:each="label : ${labels}">
                 <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"> </a>
             </th:block>
@@ -74,6 +64,5 @@
     <script th:src="@{/js/edit-modal.js}" defer></script>
     <script th:src="@{/js/card-footer-menu.js}" defer></script>
     <script th:src="@{/js/new-note-creation.js}" defer></script>
-    <script th:src="@{/js/quillEditors.js}" async></script>
 </footer>
 </html>

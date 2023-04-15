@@ -6,6 +6,7 @@ import com.mikhalov.taskonaut.service.NoteService;
 import com.mikhalov.taskonaut.util.ModelAndViewUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,16 +25,17 @@ public class NoteController {
     private final NoteService noteService;
 
     @GetMapping()
-    public ModelAndView getSortedNotes(@RequestParam(value = "sort", required = false) NoteSortOption sortBy,
-                                       @RequestParam(value = "asc", required = false) boolean ascending,
+    public ModelAndView getSortedNotes(@RequestParam(value = "sort", required = false, defaultValue = "LAST_MODIFIED") NoteSortOption sortBy,
+                                       @RequestParam(value = "asc", required = false, defaultValue = "false") boolean ascending,
+                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                       @RequestParam(value = "size", defaultValue = "20") int size,
                                        ModelAndView modelAndView) {
         log.info("getting sorted notes by {}, {}",
                 sortBy, ascending ? "asc" : "desc");
-        List<NoteDTO> sortedNotes = noteService.getSortedNotes(sortBy, ascending);
+        Page<NoteDTO> sortedNotes = noteService.getSortedNotes(sortBy, ascending, page, size);
         log.info("successful done");
-
         return modelAndViewUtil
-                .getMainModelAndView(modelAndView, sortedNotes, ascending, MAIN_NOTES_PAGE_VIEW);
+                .getPagingModelAndView(modelAndView, sortedNotes, sortBy, ascending, MAIN_NOTES_PAGE_VIEW);
     }
 
 

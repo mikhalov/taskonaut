@@ -8,10 +8,8 @@
 <body>
 <form th:action="@{/notes/{id}(id=${note.id})}" th:object="${note}" th:method="put">
     <div class="modal-body">
-        <input type="text" id="note-title-input" th:field="*{title}" placeholder="Title" maxlength="30">
-        <div class="simplemde-container">
-            <textarea id="note-content-modal" th:field="*{content}"></textarea>
-        </div>
+        <input type="text" id="note-title-input" th:field="*{title}" placeholder="Title" maxlength="50">
+        <textarea id="note-content-modal" th:field="*{content}"></textarea>
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-dark">Save</button>

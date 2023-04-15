@@ -6,6 +6,9 @@ import com.mikhalov.taskonaut.model.*;
 import com.mikhalov.taskonaut.model.enums.NoteSortOption;
 import com.mikhalov.taskonaut.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -35,42 +38,21 @@ public class NoteService {
         noteRepository.save(note);
     }
 
-    public List<NoteDTO> getSortedNotes(NoteSortOption sortOption, boolean ascending) {
+    public Page<NoteDTO> getSortedNotes(NoteSortOption sortOption, boolean ascending, int page, int size) {
         String userEmail = userService.getCurrentUserUsername();
 
         Sort sort = getSortByNoteSortOptionAndDirection(sortOption, ascending);
         Specification<Note> userEmailSpecification = (root, query, criteriaBuilder) -> {
-            root.fetch(Note_.LABEL, JoinType.LEFT);
+            root.join(Note_.LABEL, JoinType.LEFT);
 
             return criteriaBuilder
                     .equal(root.get(Note_.USER).get(User_.EMAIL), userEmail);
         };
-        List<Note> notes = noteRepository.findAll(userEmailSpecification, sort);
 
-        return noteMapper.toNoteDTOList(notes);
-    }
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Note> notes = noteRepository.findAll(userEmailSpecification, pageable);
 
-
-    public List<NoteDTO> getSortedNotesByLabelNameUsingQuery(String labelName, NoteSortOption sortOption, boolean ascending) {
-        String currentUserEmail = userService.getCurrentUserUsername();
-
-        List<Note> notes = noteRepository.findByLabelNameAndUserEmail(labelName, currentUserEmail);
-
-        Comparator<Note> comparator = Comparator.comparing((Note note) ->
-                switch (Optional.ofNullable(sortOption).orElse(LAST_MODIFIED)) {
-                    case TITLE -> note.getTitle();
-                    case CREATION_DATE -> note.getCreationDate().toString();
-                    case LAST_MODIFIED -> note.getLastModifiedDate().toString();
-                    default -> throw new IllegalArgumentException("Unsupported sort option: " + sortOption);
-                });
-
-        if (!ascending) {
-            comparator = comparator.reversed();
-        }
-
-        notes.sort(comparator);
-
-        return noteMapper.toNoteDTOList(notes);
+        return notes.map(noteMapper::toNoteDTO);
     }
 
     public List<NoteDTO> getSortedNotesByLabelName(String labelName, NoteSortOption sortOption, boolean ascending) {
@@ -160,5 +142,26 @@ public class NoteService {
         return noteMapper.toNoteDTO(note);
     }
 
+    public List<NoteDTO> getSortedNotesByLabelNameUsingQuery(String labelName, NoteSortOption sortOption, boolean ascending) {
+        String currentUserEmail = userService.getCurrentUserUsername();
+
+        List<Note> notes = noteRepository.findByLabelNameAndUserEmail(labelName, currentUserEmail);
+
+        Comparator<Note> comparator = Comparator.comparing((Note note) ->
+                switch (Optional.ofNullable(sortOption).orElse(LAST_MODIFIED)) {
+                    case TITLE -> note.getTitle();
+                    case CREATION_DATE -> note.getCreationDate().toString();
+                    case LAST_MODIFIED -> note.getLastModifiedDate().toString();
+                    default -> throw new IllegalArgumentException("Unsupported sort option: " + sortOption);
+                });
+
+        if (!ascending) {
+            comparator = comparator.reversed();
+        }
+
+        notes.sort(comparator);
+
+        return noteMapper.toNoteDTOList(notes);
+    }
 }
 

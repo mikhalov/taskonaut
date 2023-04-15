@@ -5,7 +5,7 @@
 }
 
 #note-form {
-    margin: 32px auto 16px auto;
+    margin: 10px auto 10px auto;
 }
 
 .note-wrapper {
@@ -42,4 +42,131 @@
 
 .note-wrapper.active #note-content {
     display: block;
+}
+
+.nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
+
+.nav-pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 20px 0 0;
+}
+
+.nav-pagination * {
+    user-select: none;
+}
+
+.nav-pagination li {
+    margin: 0 5px;
+}
+
+.nav-pagination .nav-page-item {
+    color: #5A5A5A;
+}
+
+.nav-page-link {
+    background-color: #4a4a4a;
+    border: none;
+    color: #f5f5f5;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nav-page-link:hover {
+    background-color: #2a2a2a;
+}
+
+.nav-page-item.active .nav-page-link {
+    background-color: #2a2a2a;
+}
+
+.sort-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /*border: 1px solid #5A5A5A;*/
+    /*padding: 5px;*/
+    /*border-radius: 5px;*/
+}
+
+.sorting-select-label {
+    font-size: x-small;
+}
+
+.select-wrapper-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.custom-select {
+    background-color: transparent;
+    position: relative;
+    user-select: none;
+    width: 120px;
+    text-align: center;
+}
+
+.select-selected {
+    background-color: transparent;
+    border-radius: 5px;
+    padding-left: 10px;
+    margin: 0 5px;
+    color: #f5f5f5;
+    cursor: pointer;
+}
+
+.select-items {
+    position: absolute;
+    background-color: #202124;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    border: 1px solid #5A5A5A;
+    border-radius: 5px;
+}
+
+.select-hide {
+    display: none;
+}
+
+.select-items div {
+    padding: 5px 10px;
+    color: #f5f5f5;
+    cursor: pointer;
+}
+
+.select-items div:hover {
+    background-color: #5A5A5A;
+}
+
+.custom-label {
+    user-select: none;
+    color: #f5f5f5;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+.custom-label input[type="checkbox"] {
+    display: none;
+}
+
+.custom-checkbox {
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    display: inline-block;
+    text-align: center;
+    font-size: xx-large;
 }
