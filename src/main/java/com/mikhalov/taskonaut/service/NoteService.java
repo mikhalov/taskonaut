@@ -55,32 +55,38 @@ public class NoteService {
         return notes.map(noteMapper::toNoteDTO);
     }
 
-    public List<NoteDTO> getSortedNotesByLabelName(String labelName, NoteSortOption sortOption, boolean ascending) {
+    public Page<NoteDTO> getSortedNotesByLabelName(String labelName, NoteSortOption sortOption,
+                                                   boolean ascending, int page, int size) {
         String userEmail = userService.getCurrentUserUsername();
         Sort sort = getSortByNoteSortOptionAndDirection(sortOption, ascending);
         Specification<Note> notesByLabelNameForCurrentUser = (root, query, criteriaBuilder) -> {
-            root.fetch(Note_.LABEL, JoinType.INNER);
+            var labelJoin = root.join(Note_.LABEL, JoinType.INNER);
 
             return criteriaBuilder.and(
                     criteriaBuilder.equal(
                             root.get(Note_.USER).get(User_.EMAIL), userEmail),
                     criteriaBuilder.equal(
-                            root.get(Note_.LABEL).get(Label_.NAME), labelName));
+                            labelJoin.get(Label_.NAME), labelName));
         };
 
-        List<Note> notes = noteRepository.findAll(notesByLabelNameForCurrentUser, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Note> notes = noteRepository.findAll(notesByLabelNameForCurrentUser, pageable);
 
-        return noteMapper.toNoteDTOList(notes);
+        return notes.map(noteMapper::toNoteDTO);
     }
 
-    public List<NoteDTO> searchNotesByKeywordAndSort(String keyword, NoteSortOption sortOption, boolean ascending) {
+    public Page<NoteDTO> searchNotesByKeywordAndSort(String keyword, NoteSortOption sortOption,
+                                                     boolean ascending, int page, int size) {
         String userEmail = userService.getCurrentUserUsername();
         Sort sort = getSortByNoteSortOptionAndDirection(sortOption, ascending);
         var noteSpecification = getSpecificationForSearchNotesByKeywordAndUserEmail(keyword, userEmail);
 
-        List<Note> notes = noteRepository.findAll(noteSpecification, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        return noteMapper.toNoteDTOList(notes);
+
+        Page<Note> notes = noteRepository.findAll(noteSpecification, pageable);
+
+        return notes.map(noteMapper::toNoteDTO);
     }
 
     private static Specification<Note> getSpecificationForSearchNotesByKeywordAndUserEmail(
@@ -88,21 +94,17 @@ public class NoteService {
         String searchPattern = "%" + keyword.toLowerCase() + "%";
 
         return (root, query, criteriaBuilder) -> {
-            root.fetch(Note_.LABEL, JoinType.LEFT);
+            var labelJoin = root.join(Note_.LABEL, JoinType.LEFT);
 
             return criteriaBuilder.and(
-                    criteriaBuilder.equal(
-                            root.get(Note_.USER).get(User_.EMAIL), userEmail),
+                    criteriaBuilder.equal(root.get(Note_.USER).get(User_.EMAIL), userEmail),
                     criteriaBuilder.or(
                             criteriaBuilder.like(
-                                    criteriaBuilder.lower(
-                                            root.get(Note_.TITLE)), searchPattern),
+                                    criteriaBuilder.lower(root.get(Note_.TITLE)), searchPattern),
                             criteriaBuilder.like(
-                                    criteriaBuilder.lower(
-                                            root.get(Note_.CONTENT)), searchPattern),
+                                    criteriaBuilder.lower(root.get(Note_.CONTENT)), searchPattern),
                             criteriaBuilder.like(
-                                    criteriaBuilder.lower(
-                                            root.get(Note_.LABEL).get(Label_.NAME)), searchPattern)
+                                    criteriaBuilder.lower(labelJoin.get(Label_.NAME)), searchPattern)
                     )
             );
         };

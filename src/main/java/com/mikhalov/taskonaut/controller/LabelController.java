@@ -32,10 +32,8 @@ public class LabelController {
     }
 
     @PutMapping
-    public RedirectView addNoteToLabel(
-            @RequestParam(name = "labelId") String labelId,
-            @RequestParam(name = "noteId") String noteId
-    ) {
+    public RedirectView addNoteToLabel(@RequestParam(name = "labelId") String labelId,
+                                       @RequestParam(name = "noteId") String noteId) {
         log.info("adding note '{}' to label '{}'", noteId, labelId);
         labelService.addNoteToLabel(noteId, labelId);
 
@@ -43,17 +41,18 @@ public class LabelController {
     }
 
     @GetMapping("/{name}")
-    public ModelAndView getSortedNotesByLabelName(
-            @RequestParam(value = "sort", required = false) NoteSortOption sortBy,
-            @RequestParam(value = "asc", required = false) boolean ascending,
-            @PathVariable String name,
-            ModelAndView modelAndView) {
+    public ModelAndView getSortedNotesByLabelName(@RequestParam(value = "sort", required = false, defaultValue = "LAST_MODIFIED") NoteSortOption sortBy,
+                                                  @RequestParam(value = "asc", required = false, defaultValue = "false") boolean ascending,
+                                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                                  @RequestParam(value = "size", defaultValue = "20") int size,
+                                                  @PathVariable String name,
+                                                  ModelAndView modelAndView) {
         log.info("getting label '{}'", name);
-        var notesByLabelName = noteService.getSortedNotesByLabelName(name, sortBy, ascending);
+        var notesByLabelName = noteService.getSortedNotesByLabelName(name, sortBy, ascending, page, size);
         log.info("successful done");
 
         return modelAndViewUtil
-                .getMainModelAndView(modelAndView, notesByLabelName, false, "/label");
+                .getPagingModelAndView(modelAndView, notesByLabelName, sortBy, ascending, "/label");
     }
 
 

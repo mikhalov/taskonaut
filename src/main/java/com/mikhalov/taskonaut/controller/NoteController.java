@@ -41,17 +41,19 @@ public class NoteController {
 
 
     @GetMapping("/search")
-    public ModelAndView searchNotes(@RequestParam(value = "sort", required = false) NoteSortOption sortBy,
-                                    @RequestParam(value = "asc", required = false) boolean ascending,
+    public ModelAndView searchNotes(@RequestParam(value = "sort", required = false, defaultValue = "LAST_MODIFIED") NoteSortOption sortBy,
+                                    @RequestParam(value = "asc", required = false, defaultValue = "false") boolean ascending,
+                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                    @RequestParam(value = "size", defaultValue = "20") int size,
                                     @RequestParam("keyword") String keyword,
                                     ModelAndView modelAndView) {
         log.info("search foundNotes by title and content that contains '{}', sort by {} {}",
                 keyword, sortBy, ascending ? "asc" : "desc");
-        List<NoteDTO> foundNotes = noteService.searchNotesByKeywordAndSort(keyword, sortBy, ascending);
+        Page<NoteDTO> foundNotes = noteService.searchNotesByKeywordAndSort(keyword, sortBy, ascending, page, size);
         log.info("successful search");
 
         return modelAndViewUtil
-                .getMainModelAndView(modelAndView, foundNotes, ascending, MAIN_NOTES_PAGE_VIEW);
+                .getPagingModelAndView(modelAndView, foundNotes, sortBy, ascending, MAIN_NOTES_PAGE_VIEW);
     }
 
 
