@@ -1,7 +1,7 @@
 package com.mikhalov.taskonaut.controller;
 
 import com.mikhalov.taskonaut.dto.NoteDTO;
-import com.mikhalov.taskonaut.model.enums.NoteSortOption;
+import com.mikhalov.taskonaut.dto.SortAndPageDTO;
 import com.mikhalov.taskonaut.service.NoteService;
 import com.mikhalov.taskonaut.util.ModelAndViewUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -25,35 +23,29 @@ public class NoteController {
     private final NoteService noteService;
 
     @GetMapping()
-    public ModelAndView getSortedNotes(@RequestParam(value = "sort", required = false, defaultValue = "LAST_MODIFIED") NoteSortOption sortBy,
-                                       @RequestParam(value = "asc", required = false, defaultValue = "false") boolean ascending,
-                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                       @RequestParam(value = "size", defaultValue = "20") int size,
+    public ModelAndView getSortedNotes(@ModelAttribute SortAndPageDTO sortAndPage,
                                        ModelAndView modelAndView) {
-        log.info("getting sorted notes by {}, {}",
-                sortBy, ascending ? "asc" : "desc");
-        Page<NoteDTO> sortedNotes = noteService.getSortedNotes(sortBy, ascending, page, size);
-        log.info("successful done");
-        return modelAndViewUtil
-                .getPagingModelAndView(modelAndView, sortedNotes, sortBy, ascending, MAIN_NOTES_PAGE_VIEW);
+        log.info("getting sorted notes.");
+        Page<NoteDTO> sortedNotes = noteService.getSortedNotes(sortAndPage);
+        log.info("Successful sorted. \nParams: {}, {}",
+                sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
+
+        return modelAndViewUtil.getPagingModelAndView(modelAndView,
+                sortedNotes, sortAndPage, MAIN_NOTES_PAGE_VIEW);
     }
 
 
-
     @GetMapping("/search")
-    public ModelAndView searchNotes(@RequestParam(value = "sort", required = false, defaultValue = "LAST_MODIFIED") NoteSortOption sortBy,
-                                    @RequestParam(value = "asc", required = false, defaultValue = "false") boolean ascending,
-                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "size", defaultValue = "20") int size,
+    public ModelAndView searchNotes(@ModelAttribute SortAndPageDTO sortAndPage,
                                     @RequestParam("keyword") String keyword,
                                     ModelAndView modelAndView) {
-        log.info("search foundNotes by title and content that contains '{}', sort by {} {}",
-                keyword, sortBy, ascending ? "asc" : "desc");
-        Page<NoteDTO> foundNotes = noteService.searchNotesByKeywordAndSort(keyword, sortBy, ascending, page, size);
+        log.info("search foundNotes by title and content that contains '{}'\nSorting params: {}, {}",
+                keyword, sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
+        Page<NoteDTO> foundNotes = noteService.searchNotesByKeywordAndSort(keyword, sortAndPage);
         log.info("successful search");
 
         return modelAndViewUtil
-                .getPagingModelAndView(modelAndView, foundNotes, sortBy, ascending, MAIN_NOTES_PAGE_VIEW);
+                .getPagingModelAndView(modelAndView, foundNotes, sortAndPage, MAIN_NOTES_PAGE_VIEW);
     }
 
 

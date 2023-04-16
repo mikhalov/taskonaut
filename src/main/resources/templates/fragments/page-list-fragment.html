@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thymeleaf Fragments</title>
+</head>
+<body>
+    <th:block th:fragment="nav_item (page)">
+        <a class="nav-page-link"
+           th:onclick="'goToPage(' + ${page} + ');'"
+           th:text="${page + 1}"></a>
+    </th:block>
+</body>
+</html>

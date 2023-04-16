@@ -1,6 +1,7 @@
 package com.mikhalov.taskonaut.service;
 
 import com.mikhalov.taskonaut.dto.NoteDTO;
+import com.mikhalov.taskonaut.dto.SortAndPageDTO;
 import com.mikhalov.taskonaut.mapper.NoteMapper;
 import com.mikhalov.taskonaut.model.*;
 import com.mikhalov.taskonaut.model.enums.NoteSortOption;
@@ -38,10 +39,10 @@ public class NoteService {
         noteRepository.save(note);
     }
 
-    public Page<NoteDTO> getSortedNotes(NoteSortOption sortOption, boolean ascending, int page, int size) {
+    public Page<NoteDTO> getSortedNotes(SortAndPageDTO sortAndPage) {
         String userEmail = userService.getCurrentUserUsername();
 
-        Sort sort = getSortByNoteSortOptionAndDirection(sortOption, ascending);
+        Sort sort = getSortByNoteSortOptionAndDirection(sortAndPage.getSort(), sortAndPage.isAsc());
         Specification<Note> userEmailSpecification = (root, query, criteriaBuilder) -> {
             root.join(Note_.LABEL, JoinType.LEFT);
 
@@ -49,16 +50,15 @@ public class NoteService {
                     .equal(root.get(Note_.USER).get(User_.EMAIL), userEmail);
         };
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(sortAndPage.getPage(), sortAndPage.getSize(), sort);
         Page<Note> notes = noteRepository.findAll(userEmailSpecification, pageable);
 
         return notes.map(noteMapper::toNoteDTO);
     }
 
-    public Page<NoteDTO> getSortedNotesByLabelName(String labelName, NoteSortOption sortOption,
-                                                   boolean ascending, int page, int size) {
+    public Page<NoteDTO> getSortedNotesByLabelName(String labelName,SortAndPageDTO sortAndPage) {
         String userEmail = userService.getCurrentUserUsername();
-        Sort sort = getSortByNoteSortOptionAndDirection(sortOption, ascending);
+        Sort sort = getSortByNoteSortOptionAndDirection(sortAndPage.getSort(), sortAndPage.isAsc());
         Specification<Note> notesByLabelNameForCurrentUser = (root, query, criteriaBuilder) -> {
             var labelJoin = root.join(Note_.LABEL, JoinType.INNER);
 
@@ -69,19 +69,18 @@ public class NoteService {
                             labelJoin.get(Label_.NAME), labelName));
         };
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(sortAndPage.getPage(), sortAndPage.getSize(), sort);
         Page<Note> notes = noteRepository.findAll(notesByLabelNameForCurrentUser, pageable);
 
         return notes.map(noteMapper::toNoteDTO);
     }
 
-    public Page<NoteDTO> searchNotesByKeywordAndSort(String keyword, NoteSortOption sortOption,
-                                                     boolean ascending, int page, int size) {
+    public Page<NoteDTO> searchNotesByKeywordAndSort(String keyword, SortAndPageDTO sortAndPage) {
         String userEmail = userService.getCurrentUserUsername();
-        Sort sort = getSortByNoteSortOptionAndDirection(sortOption, ascending);
+        Sort sort = getSortByNoteSortOptionAndDirection(sortAndPage.getSort(), sortAndPage.isAsc());
         var noteSpecification = getSpecificationForSearchNotesByKeywordAndUserEmail(keyword, userEmail);
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(sortAndPage.getPage(), sortAndPage.getSize(), sort);
 
 
         Page<Note> notes = noteRepository.findAll(noteSpecification, pageable);

@@ -1,7 +1,7 @@
 package com.mikhalov.taskonaut.controller;
 
 import com.mikhalov.taskonaut.dto.LabelDTO;
-import com.mikhalov.taskonaut.model.enums.NoteSortOption;
+import com.mikhalov.taskonaut.dto.SortAndPageDTO;
 import com.mikhalov.taskonaut.service.LabelService;
 import com.mikhalov.taskonaut.service.NoteService;
 import com.mikhalov.taskonaut.util.ModelAndViewUtil;
@@ -41,18 +41,16 @@ public class LabelController {
     }
 
     @GetMapping("/{name}")
-    public ModelAndView getSortedNotesByLabelName(@RequestParam(value = "sort", required = false, defaultValue = "LAST_MODIFIED") NoteSortOption sortBy,
-                                                  @RequestParam(value = "asc", required = false, defaultValue = "false") boolean ascending,
-                                                  @RequestParam(value = "page", defaultValue = "0") int page,
-                                                  @RequestParam(value = "size", defaultValue = "20") int size,
+    public ModelAndView getSortedNotesByLabelName(@ModelAttribute SortAndPageDTO sortAndPage,
                                                   @PathVariable String name,
                                                   ModelAndView modelAndView) {
-        log.info("getting label '{}'", name);
-        var notesByLabelName = noteService.getSortedNotesByLabelName(name, sortBy, ascending, page, size);
+        log.info("getting label '{}'\nSorting params: {}, {}",
+                name, sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
+        var notesByLabelName = noteService.getSortedNotesByLabelName(name, sortAndPage);
         log.info("successful done");
 
         return modelAndViewUtil
-                .getPagingModelAndView(modelAndView, notesByLabelName, sortBy, ascending, "/label");
+                .getPagingModelAndView(modelAndView, notesByLabelName, sortAndPage, "/label");
     }
 
 

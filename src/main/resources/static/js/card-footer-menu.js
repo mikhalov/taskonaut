@@ -1,22 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let openMenu = null; // Keep track of the currently open dropdown menu
+    let openMenu = null;
     const menuButtons = document.querySelectorAll(".three-dots-container");
 
     menuButtons.forEach(function (menuButton) {
         menuButton.addEventListener("click", function (event) {
-            event.stopPropagation(); // Prevent the event from bubbling up to the window
+            event.stopPropagation();
             var dropdownMenu = this.nextElementSibling;
 
-            // Reset the transform styles before checking the position
             dropdownMenu.style.transform = '';
 
             if (openMenu !== dropdownMenu) {
                 closeMenu();
             }
             dropdownMenu.classList.toggle("show");
-            openMenu = dropdownMenu; // Update the currently open dropdown menu
+            openMenu = dropdownMenu;
 
-            // Check the position after updating the open menu
             checkMenuPosition(openMenu);
         });
     });
@@ -28,44 +26,35 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeMenu() {
         if (openMenu !== null) {
             openMenu.classList.remove("show");
-            openMenu = null; // Reset the currently open dropdown menu
+            openMenu = null;
         }
     }
 });
 
 function checkMenuPosition(dropdownMenu) {
-    // Get the custom navbar's bounding rectangle
     var navbarRect = $('.custom-navbar')[0].getBoundingClientRect();
 
-    // Get the dropdown menu's bounding rectangle
     var menuRect = dropdownMenu.getBoundingClientRect();
 
-    // Check if the menu is out of the viewport to the right
     var outOfViewportRight = menuRect.right > window.innerWidth;
 
-    // Check if there's not enough space at the top (considering the custom navbar)
     var notEnoughSpaceTop = menuRect.top - navbarRect.bottom < dropdownMenu.offsetHeight;
 
 
-    // Get the dimensions of the menu-button element
     var menuButtonRect = $('#menu-button')[0].getBoundingClientRect();
     var menuButtonHeight = menuButtonRect.height;
     var menuButtonWidth = menuButtonRect.width;
 
-    // Initialize transform style
     var transformStyle = '';
 
     if (notEnoughSpaceTop) {
-        // Apply the vertical adjustment to the menu's position (considering the custom navbar and menu-button height)
         transformStyle += 'translateY(calc(100% + ' + menuButtonHeight + 'px))';
     }
 
     if (outOfViewportRight) {
-        // Apply the horizontal adjustment to the menu's position (subtracting the menu-button width)
         transformStyle += ' translateX(calc(-100% + ' + menuButtonWidth + 'px))';
     }
 
-    // Set the transform style
     dropdownMenu.style.transform = transformStyle;
 }
 
