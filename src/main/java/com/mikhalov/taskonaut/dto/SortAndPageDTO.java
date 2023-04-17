@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Min;
+
 @Getter
 @Setter
 @ToString
@@ -16,7 +18,9 @@ public class SortAndPageDTO {
     private NoteSortOption sort = NoteSortOption.LAST_MODIFIED;
     @ToString.Exclude
     private boolean asc = false;
+    @Min(value = 0)
     private int page = 0;
+    @Min(value = 0)
     private int size = 20;
     @ToString.Exclude
     private int totalPages;

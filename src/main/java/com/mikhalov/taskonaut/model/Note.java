@@ -39,5 +39,13 @@ public class Note {
     @JoinColumn(name = "user_id")
     private User user;
 
+
+    public void removeLabel() {
+        if (this.label != null) {
+            this.label.getNotes().remove(this);
+            this.label = null;
+        }
+    }
+
 }
 

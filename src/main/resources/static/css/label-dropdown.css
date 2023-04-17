@@ -48,9 +48,9 @@
     overflow: auto;
 }
 
-input[name="labelName"] {
-    padding-right: 60px;
-}
+/*input[name="labelName"] {*/
+/*    padding-right: 60px;*/
+/*}*/
 
 .menu-element * {
     background: transparent;
@@ -63,7 +63,7 @@ input[name="labelName"] {
     border: none;
 }
 
-input[type="submit"],
+/*input[type="submit"],*/
 .input-submit,
 .dropdown-item {
     cursor: pointer;
@@ -76,10 +76,10 @@ input[type="submit"],
     cursor: default;
 }
 
-input[type="submit"]:hover,
+/*input[type="submit"]:hover,*/
 .input-submit:hover,
 .dropdown-item:hover {
-    background-color: #5A5A5A;
+    background-color: #2a2a2a;
 }
 
 
@@ -89,12 +89,28 @@ input[type="submit"]:hover,
     display: block;
     width: 100%;
     border: none;
-    background: transparent;
+    background-color: transparent;
     cursor: text;
     text-align: left;
-    padding: 3px 3px;
+    margin-bottom: 5px;
+    padding: 5px 3px;
 }
 
+
+#label-name::placeholder {
+    user-select: none;
+    color: #f5f5f5;
+    line-height: 44px;
+}
+
+
+#label-name:focus {
+    outline: none;
+}
+
+#label-name:focus-within {
+    background-color: #5a5a5a; /* Change background color to white */
+}
 
 .dropdown {
     position: relative;

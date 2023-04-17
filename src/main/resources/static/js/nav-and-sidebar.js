@@ -91,3 +91,49 @@ $(document).ready(function () {
     });
 });
 
+let currentId = null;
+
+
+function openConfirmModal(labelId) {
+    let mouseDownOutsideModal = false;
+    const modal = document.getElementById('confirmationModal');
+    modal.style.display = 'block';
+    currentId = labelId;
+
+
+    window.addEventListener("mousedown", function (event) {
+
+        if (event.target === modal) {
+            mouseDownOutsideModal = true;
+        }
+    });
+
+    window.addEventListener("mouseup", function (event) {
+        if (event.target === modal && mouseDownOutsideModal) {
+            closeConfirmModal();
+        }
+        mouseDownOutsideModal = false;
+    });
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmationModal').style.display = 'none';
+}
+
+function deleteLabel() {
+    closeConfirmModal();
+    fetch(`/labels/${currentId}`, {
+        method: 'DELETE',
+    })
+        .then((response) => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Error occurred while deleting the label.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Error occurred while deleting the label.');
+        });
+}

@@ -1,16 +1,27 @@
 package com.mikhalov.taskonaut.controller;
 
+import com.mikhalov.taskonaut.dto.ExportParamsDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.dto.SortAndPageDTO;
 import com.mikhalov.taskonaut.service.NoteService;
+import com.mikhalov.taskonaut.service.PdfExportService;
 import com.mikhalov.taskonaut.util.ModelAndViewUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -20,10 +31,11 @@ public class NoteController {
 
     private static final String MAIN_NOTES_PAGE_VIEW = "/notes";
     private final ModelAndViewUtil modelAndViewUtil;
+    private final PdfExportService pdfExportService;
     private final NoteService noteService;
 
     @GetMapping()
-    public ModelAndView getSortedNotes(@ModelAttribute SortAndPageDTO sortAndPage,
+    public ModelAndView getSortedNotes(@ModelAttribute @Valid SortAndPageDTO sortAndPage,
                                        ModelAndView modelAndView) {
         log.info("getting sorted notes.");
         Page<NoteDTO> sortedNotes = noteService.getSortedNotes(sortAndPage);
@@ -36,7 +48,7 @@ public class NoteController {
 
 
     @GetMapping("/search")
-    public ModelAndView searchNotes(@ModelAttribute SortAndPageDTO sortAndPage,
+    public ModelAndView searchNotes(@ModelAttribute @Valid SortAndPageDTO sortAndPage,
                                     @RequestParam("keyword") String keyword,
                                     ModelAndView modelAndView) {
         log.info("search foundNotes by title and content that contains '{}'\nSorting params: {}, {}",
@@ -46,6 +58,26 @@ public class NoteController {
 
         return modelAndViewUtil
                 .getPagingModelAndView(modelAndView, foundNotes, sortAndPage, MAIN_NOTES_PAGE_VIEW);
+    }
+
+    @GetMapping(value = "/export/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> exportNotesToPdf(@ModelAttribute ExportParamsDTO exportParams) {
+
+        log.info("user request to export all notes to PDF and download\n" +
+                "{}", exportParams);
+        List<NoteDTO> notes = noteService.getSortedNotesForExport(exportParams);
+
+        try {
+            byte[] pdfContent = pdfExportService.exportNotesToPdf(notes, exportParams);
+            String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy.MM.dd_HH-mm"));
+            return ResponseEntity.ok()
+                    .header("Content-Disposition",
+                            String.format("attachment; filename=notes_%s.pdf", currentDate))
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfContent);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
@@ -60,7 +92,6 @@ public class NoteController {
     public ModelAndView getNoteById(@PathVariable String id, ModelAndView modelAndView) {
         log.info("getting by {}id", id);
         NoteDTO note = noteService.getNoteDTOById(id);
-        log.info("label {}", note.getLabelDTO());
         modelAndView.addObject("note", note);
         modelAndView.setViewName("fragments/form-fragment");
 

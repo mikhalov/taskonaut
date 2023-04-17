@@ -238,6 +238,7 @@ body {
 
 
 .sidebar {
+    user-select: none;
     position: fixed;
     width: 250px;
     height: calc(100% - 57px);
@@ -249,18 +250,7 @@ body {
     transition: left 0.3s ease;
 }
 
-.sidebar a {
-    padding: 8px 8px 8px 16px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #f5f5f5;
-    display: block;
-    transition: 0.3s;
-}
 
-.sidebar a:hover {
-    background-color: #5A5A5A;
-}
 
 .custom-dropdown-content,
 .dropdown-menu {
@@ -269,6 +259,7 @@ body {
 }
 
 .card {
+    user-select: none;
     border-radius: 7px;
     display: flex;
     flex-direction: column;
@@ -297,6 +288,10 @@ body {
     max-width: 25%;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.card-title {
+    font-size: large;
 }
 
 .card-title h2 {
@@ -415,4 +410,67 @@ body {
 
 .hidden {
     display: none;
+}
+
+.confirm-modal {
+    display:none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.confirm-modal-content {
+    user-select: none;
+    background-color: #202124;
+    margin: 15% auto;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    text-align: center;
+}
+
+
+.label-container:hover {
+    background-color: #2a2a2a;
+}
+
+#trash-icon {
+    user-select: none;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+    padding: 10px;
+    box-sizing: content-box;
+    vertical-align: sub;
+    filter: invert(80%);
+}
+
+#trash-icon:hover {
+    filter: invert(0%);
+}
+
+.label-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.label-container a {
+    width: 100%;
+    padding: 8px 8px 8px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #f5f5f5;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.label-container #trash-icon {
+    display: inline-block;
+    cursor: pointer;
 }

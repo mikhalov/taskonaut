@@ -42,17 +42,30 @@
                     </div>
                 </form>
                 <div class="nav-content-right">
+                    <button id="exportButton" class="transparent-back-btn" onclick="exportNotes()">Export</button>
                     <button class="transparent-back-btn" onclick="location.href='/logout'">Logout</button>
                 </div>
             </div>
         </nav>
         <div class="sidebar" id="sidebar">
-            <a class="nav-link" th:href="@{/notes}">Notes</a>
-
-
+            <div class="label-container">
+                <a class="nav-link" th:href="@{/notes}">Notes</a>
+            </div>
             <th:block th:each="label : ${labels}">
-                <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"> </a>
+                <div class="label-container">
+                    <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"> </a>
+                    <img th:src="@{/image/trash_icon1.svg}" id="trash-icon" th:attr="label-id=${label.id}"
+                         onclick="openConfirmModal(this.getAttribute('label-id'))" alt="Delete Label"/>
+                </div>
             </th:block>
+        </div>
+    </div>
+    <div id="confirmationModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <h4>Confirm Deletion</h4>
+            <p>Are you sure you want to delete this label?</p>
+            <button class="transparent-back-btn" id="confirmDelete" onclick="deleteLabel()">Yes</button>
+            <button class="transparent-back-btn" onclick="closeConfirmModal()">No</button>
         </div>
     </div>
 </header>

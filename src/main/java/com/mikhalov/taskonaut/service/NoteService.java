@@ -1,5 +1,6 @@
 package com.mikhalov.taskonaut.service;
 
+import com.mikhalov.taskonaut.dto.ExportParamsDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.dto.SortAndPageDTO;
 import com.mikhalov.taskonaut.mapper.NoteMapper;
@@ -13,10 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.JoinType;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class NoteService {
     private final UserService userService;
     private final NoteMapper noteMapper;
 
+
     public void createNote(NoteDTO noteDTO) {
         Note note = noteMapper.toNote(noteDTO);
         User user = userService.getCurrentUser();
@@ -43,12 +45,8 @@ public class NoteService {
         String userEmail = userService.getCurrentUserUsername();
 
         Sort sort = getSortByNoteSortOptionAndDirection(sortAndPage.getSort(), sortAndPage.isAsc());
-        Specification<Note> userEmailSpecification = (root, query, criteriaBuilder) -> {
-            root.join(Note_.LABEL, JoinType.LEFT);
-
-            return criteriaBuilder
-                    .equal(root.get(Note_.USER).get(User_.EMAIL), userEmail);
-        };
+        Specification<Note> userEmailSpecification = (root, query, criteriaBuilder) -> criteriaBuilder
+                .equal(root.get(Note_.USER).get(User_.EMAIL), userEmail);
 
         Pageable pageable = PageRequest.of(sortAndPage.getPage(), sortAndPage.getSize(), sort);
         Page<Note> notes = noteRepository.findAll(userEmailSpecification, pageable);
@@ -56,7 +54,23 @@ public class NoteService {
         return notes.map(noteMapper::toNoteDTO);
     }
 
-    public Page<NoteDTO> getSortedNotesByLabelName(String labelName,SortAndPageDTO sortAndPage) {
+    public List<NoteDTO> getSortedNotesForExport(ExportParamsDTO exportParams) {
+        String userEmail = userService.getCurrentUserUsername();
+
+        Sort sort = getSortByNoteSortOptionAndDirection(exportParams.getSort(), exportParams.isAsc());
+        Specification<Note> userEmailFetchLabels = ((root, query, criteriaBuilder) -> {
+            root.fetch(Note_.LABEL, JoinType.LEFT);
+
+            return criteriaBuilder
+                    .equal(root.get(Note_.USER).get(User_.EMAIL), userEmail);
+        });
+
+        List<Note> sortedNotes = noteRepository.findAll(userEmailFetchLabels, sort);
+
+        return noteMapper.toNoteDTOList(sortedNotes);
+    }
+
+    public Page<NoteDTO> getSortedNotesByLabelName(String labelName, SortAndPageDTO sortAndPage) {
         String userEmail = userService.getCurrentUserUsername();
         Sort sort = getSortByNoteSortOptionAndDirection(sortAndPage.getSort(), sortAndPage.isAsc());
         Specification<Note> notesByLabelNameForCurrentUser = (root, query, criteriaBuilder) -> {
@@ -88,8 +102,9 @@ public class NoteService {
         return notes.map(noteMapper::toNoteDTO);
     }
 
-    private static Specification<Note> getSpecificationForSearchNotesByKeywordAndUserEmail(
+    private Specification<Note> getSpecificationForSearchNotesByKeywordAndUserEmail(
             String keyword, String userEmail) {
+
         String searchPattern = "%" + keyword.toLowerCase() + "%";
 
         return (root, query, criteriaBuilder) -> {
@@ -128,8 +143,12 @@ public class NoteService {
         noteRepository.save(note);
     }
 
+    @Transactional
     public void deleteNote(String id) {
-        noteRepository.deleteById(id);
+        Note note = getNoteById(id);
+        note.removeLabel();
+
+        noteRepository.delete(note);
     }
 
     public Note getNoteById(String id) {
@@ -143,26 +162,5 @@ public class NoteService {
         return noteMapper.toNoteDTO(note);
     }
 
-    public List<NoteDTO> getSortedNotesByLabelNameUsingQuery(String labelName, NoteSortOption sortOption, boolean ascending) {
-        String currentUserEmail = userService.getCurrentUserUsername();
-
-        List<Note> notes = noteRepository.findByLabelNameAndUserEmail(labelName, currentUserEmail);
-
-        Comparator<Note> comparator = Comparator.comparing((Note note) ->
-                switch (Optional.ofNullable(sortOption).orElse(LAST_MODIFIED)) {
-                    case TITLE -> note.getTitle();
-                    case CREATION_DATE -> note.getCreationDate().toString();
-                    case LAST_MODIFIED -> note.getLastModifiedDate().toString();
-                    default -> throw new IllegalArgumentException("Unsupported sort option: " + sortOption);
-                });
-
-        if (!ascending) {
-            comparator = comparator.reversed();
-        }
-
-        notes.sort(comparator);
-
-        return noteMapper.toNoteDTOList(notes);
-    }
 }
 

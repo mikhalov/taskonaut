@@ -7,10 +7,13 @@ import com.mikhalov.taskonaut.service.NoteService;
 import com.mikhalov.taskonaut.util.ModelAndViewUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -41,7 +44,7 @@ public class LabelController {
     }
 
     @GetMapping("/{name}")
-    public ModelAndView getSortedNotesByLabelName(@ModelAttribute SortAndPageDTO sortAndPage,
+    public ModelAndView getSortedNotesByLabelName(@ModelAttribute @Valid SortAndPageDTO sortAndPage,
                                                   @PathVariable String name,
                                                   ModelAndView modelAndView) {
         log.info("getting label '{}'\nSorting params: {}, {}",
@@ -51,6 +54,13 @@ public class LabelController {
 
         return modelAndViewUtil
                 .getPagingModelAndView(modelAndView, notesByLabelName, sortAndPage, "/label");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteLabelById(@PathVariable String id) {
+        labelService.deleteLabel(id);
+
+        return ResponseEntity.ok("Delete successful");
     }
 
 

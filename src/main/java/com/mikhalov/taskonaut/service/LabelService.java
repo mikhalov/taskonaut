@@ -8,8 +8,10 @@ import com.mikhalov.taskonaut.model.User;
 import com.mikhalov.taskonaut.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +60,19 @@ public class LabelService {
                 .stream()
                 .map(labelMapper::toLabelDTO)
                 .toList();
+    }
+
+    @Transactional
+    public void deleteLabel(String labelId) {
+        Label label = getById(labelId);
+
+        List<Note> notes = new ArrayList<>(label.getNotes());
+        for (Note note : notes) {
+            label.removeNote(note);
+            noteService.updateNote(note);
+        }
+
+        labelRepository.delete(label);
     }
 
     private Optional<Label> getLabelByNameForCurrentUser(String name, String userEmail) {

@@ -20,7 +20,7 @@
                 <div class="custom-dropdown-content">
                     <form th:action="@{/labels}" th:object="${label}" th:method="post">
                         <div class="menu-element">
-                            <input type="text" id="label-name" th:field="*{name}" placeholder="Label name" required
+                            <input type="text" id="label-name" th:field="*{name}" placeholder="Enter label name" required
                                    maxlength="20" autocomplete="off">
                             <input type="hidden" name="noteId" th:value="${note.id}">
                             <button type="submit" class="input-submit"

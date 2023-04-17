@@ -1,6 +1,7 @@
-let mouseDownOutsideModal = false;
+
 
 async function openModal(noteId) {
+    let mouseDownOutsideModal = false;
     const modal = document.getElementById("editModal");
     const modalContent = modal.querySelector(".modal-content");
 

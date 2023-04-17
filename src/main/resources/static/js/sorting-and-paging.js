@@ -22,6 +22,7 @@ function goToPage(page) {
 
 
 
+
 function toggleSelect(event) {
     if (event) {
         event.stopPropagation();
@@ -58,4 +59,20 @@ function updateCheckboxLabel() {
 
 document.addEventListener('DOMContentLoaded', function() {
     updateCheckboxLabel();
+});
+
+function exportNotes() {
+    const sortValue = $('input[name="sort"]').val();
+    const ascValue = $('#sortCheckbox').is(':checked') ? 'true' : 'false';
+    location.href = `/notes/export/pdf?sort=${sortValue}&asc=${ascValue}`;
+}
+
+$(document).ready(function () {
+    const currentPath = window.location.pathname;
+
+    if (currentPath === '/notes') {
+        $('#exportButton').show();
+    } else {
+        $('#exportButton').hide();
+    }
 });
