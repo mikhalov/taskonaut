@@ -40,6 +40,7 @@ public class LabelService {
                 });
 
         addNoteToLabel(note, label);
+
     }
 
     public void addNoteToLabel(String noteId, String labelId) {
@@ -48,9 +49,9 @@ public class LabelService {
         addNoteToLabel(note, label);
     }
 
-    private void addNoteToLabel(Note note, Label label) {
+    private Label addNoteToLabel(Note note, Label label) {
         label.addNote(note);
-        labelRepository.save(label);
+        return labelRepository.save(label);
     }
 
     public List<LabelDTO> getAllLabels() {

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -29,6 +30,7 @@ public class LabelController {
     @PostMapping
     public RedirectView createLabel(@ModelAttribute LabelDTO label, @RequestParam("noteId") String noteId) {
         log.info("creating new label {} for note {}id", label, noteId);
+
         labelService.createLabel(label, noteId);
 
         return new RedirectView("/notes");
@@ -38,6 +40,7 @@ public class LabelController {
     public RedirectView addNoteToLabel(@RequestParam(name = "labelId") String labelId,
                                        @RequestParam(name = "noteId") String noteId) {
         log.info("adding note '{}' to label '{}'", noteId, labelId);
+
         labelService.addNoteToLabel(noteId, labelId);
 
         return new RedirectView("/notes");
@@ -49,15 +52,17 @@ public class LabelController {
                                                   ModelAndView modelAndView) {
         log.info("getting label '{}'\nSorting params: {}, {}",
                 name, sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
+
+        List<LabelDTO> labels = labelService.getAllLabels();
         var notesByLabelName = noteService.getSortedNotesByLabelName(name, sortAndPage);
         log.info("successful done");
 
         return modelAndViewUtil
-                .getPagingModelAndView(modelAndView, notesByLabelName, sortAndPage, "/label");
+                .getPagingModelAndView(modelAndView, labels, notesByLabelName, sortAndPage, "/label");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteLabelById(@PathVariable String id) {
+    public ResponseEntity<String> deleteLabel(@PathVariable String id) {
         labelService.deleteLabel(id);
 
         return ResponseEntity.ok("Delete successful");

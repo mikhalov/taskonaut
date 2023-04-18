@@ -17,17 +17,21 @@ public class ModelAndViewUtil {
 
     private final LabelService labelService;
 
+    public List<LabelDTO> getAllLabels() {
+        return labelService.getAllLabels();
+    }
+
     public ModelAndView getPagingModelAndView(ModelAndView modelAndView,
-                                              Page<NoteDTO> notesDTO,
+                                              List<LabelDTO> labels,
+                                              Page<NoteDTO> notes,
                                               SortAndPageDTO sortAndPage,
                                               String viewName) {
-        List<LabelDTO> labels = labelService.getAllLabels();
-        sortAndPage.setTotalPages(notesDTO.getTotalPages());
+        sortAndPage.setTotalPages(notes.getTotalPages());
 
         modelAndView.addObject("labels", labels);
         modelAndView.addObject("note", new NoteDTO());
         modelAndView.addObject("label", new LabelDTO());
-        modelAndView.addObject("notes", notesDTO.getContent());
+        modelAndView.addObject("notes", notes.getContent());
         modelAndView.addObject("sortAndPage", sortAndPage);
         modelAndView.setViewName(viewName);
 
