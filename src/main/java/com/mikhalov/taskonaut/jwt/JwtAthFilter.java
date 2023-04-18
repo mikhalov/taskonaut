@@ -32,7 +32,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("JwtAuthFilter started for request URL: {}", request.getRequestURL());
+        log.trace("JwtAuthFilter started for request URL: {}", request.getRequestURL());
 
         String jwt = null;
         String userEmail = null;
@@ -59,7 +59,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
                 log.warn("Invalid JWT token for user: {}", userEmail);
             }
         } else {
-            log.info("No JWT token found or user already authenticated.");
+            log.trace("No JWT token found or user already authenticated.");
         }
 
         filterChain.doFilter(request, response);
