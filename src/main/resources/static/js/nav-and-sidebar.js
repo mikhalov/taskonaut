@@ -92,17 +92,20 @@ $(document).ready(function () {
 });
 
 let currentId = null;
+let currentType = null;
 
-
-function openConfirmModal(labelId) {
+function openConfirmModal(itemType, itemId) {
     let mouseDownOutsideModal = false;
     const modal = document.getElementById('confirmationModal');
     modal.style.display = 'block';
-    currentId = labelId;
+    currentId = itemId;
+    currentType = itemType;
 
+    // Update the confirmation message based on the type of item being deleted
+    document.getElementById('confirmModalTitle').textContent = `Confirm ${itemType.charAt(0).toUpperCase() + itemType.slice(1)} Deletion`;
+    document.getElementById('confirmModalText').textContent = `Are you sure you want to delete this ${itemType}?`;
 
     window.addEventListener("mousedown", function (event) {
-
         if (event.target === modal) {
             mouseDownOutsideModal = true;
         }
@@ -116,24 +119,34 @@ function openConfirmModal(labelId) {
     });
 }
 
-function closeConfirmModal() {
-    document.getElementById('confirmationModal').style.display = 'none';
-}
+const itemTypeEndpoints = {
+    label: 'labels',
+    note: 'notes',
+};
 
-function deleteLabel() {
+function deleteItem() {
     closeConfirmModal();
-    fetch(`/labels/${currentId}`, {
+
+    const endpoint = itemTypeEndpoints[currentType];
+    const url = `/${endpoint}/${currentId}`;
+
+    fetch(url, {
         method: 'DELETE',
     })
         .then((response) => {
             if (response.ok) {
                 location.reload();
             } else {
-                alert('Error occurred while deleting the label.');
+                alert(`Error occurred while deleting the ${currentType}.`);
             }
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('Error occurred while deleting the label.');
+            alert(`Error occurred while deleting the ${currentType}.`);
         });
 }
+
+function closeConfirmModal() {
+    document.getElementById('confirmationModal').style.display = 'none';
+}
+

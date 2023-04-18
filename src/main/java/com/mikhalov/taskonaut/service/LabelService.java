@@ -40,6 +40,7 @@ public class LabelService {
                 });
 
         addNoteToLabel(note, label);
+
     }
 
     public void addNoteToLabel(String noteId, String labelId) {

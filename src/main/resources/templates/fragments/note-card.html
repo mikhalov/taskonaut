@@ -20,7 +20,8 @@
                 <div class="custom-dropdown-content">
                     <form th:action="@{/labels}" th:object="${label}" th:method="post">
                         <div class="menu-element">
-                            <input type="text" id="label-name" th:field="*{name}" placeholder="Enter label name" required
+                            <input type="text" id="label-name" th:field="*{name}" placeholder="Enter label name"
+                                   required
                                    maxlength="20" autocomplete="off">
                             <input type="hidden" name="noteId" th:value="${note.id}">
                             <button type="submit" class="input-submit"
@@ -51,12 +52,14 @@
                         <input type="text" id="lastModifiedAt" class="last-modified" th:value="${note.lastModifiedAt}"
                                readonly>
                     </div>
-                    <form th:action="@{/notes/{id}(id=${note.id})}" th:method="delete">
+<!--                    <form id="deleteForm" th:action="@{/notes/{id}(id=${note.id})}" th:method="delete">-->
                         <div class="menu-element">
-                            <button class="input-submit" type="submit">Delete this note</button>
+                            <button class="input-submit" th:attr="note-id=${note.id}"
+                                    onclick="openConfirmModal('note', this.getAttribute('note-id'))"
+                                    type="button" id="deleteNoteButton">Delete this note
+                            </button>
                         </div>
-                    </form>
-
+<!--                    </form>-->
                 </div>
             </div>
         </div>

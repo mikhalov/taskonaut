@@ -1,6 +1,7 @@
 package com.mikhalov.taskonaut.controller;
 
 import com.mikhalov.taskonaut.dto.ExportParamsDTO;
+import com.mikhalov.taskonaut.dto.LabelDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.dto.SortAndPageDTO;
 import com.mikhalov.taskonaut.service.NoteService;
@@ -34,15 +35,17 @@ public class NoteController {
     private final PdfExportService pdfExportService;
     private final NoteService noteService;
 
+
     @GetMapping()
     public ModelAndView getSortedNotes(@ModelAttribute @Valid SortAndPageDTO sortAndPage,
                                        ModelAndView modelAndView) {
         log.info("getting sorted notes.");
+        List<LabelDTO> labels = modelAndViewUtil.getAllLabels();
         Page<NoteDTO> sortedNotes = noteService.getSortedNotes(sortAndPage);
         log.info("Successful sorted. \nParams: {}, {}",
                 sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
 
-        return modelAndViewUtil.getPagingModelAndView(modelAndView,
+        return modelAndViewUtil.getPagingModelAndView(modelAndView, labels,
                 sortedNotes, sortAndPage, MAIN_NOTES_PAGE_VIEW);
     }
 
@@ -53,11 +56,13 @@ public class NoteController {
                                     ModelAndView modelAndView) {
         log.info("search foundNotes by title and content that contains '{}'\nSorting params: {}, {}",
                 keyword, sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
+
+        List<LabelDTO> labels = modelAndViewUtil.getAllLabels();
         Page<NoteDTO> foundNotes = noteService.searchNotesByKeywordAndSort(keyword, sortAndPage);
         log.info("successful search");
 
         return modelAndViewUtil
-                .getPagingModelAndView(modelAndView, foundNotes, sortAndPage, MAIN_NOTES_PAGE_VIEW);
+                .getPagingModelAndView(modelAndView, labels, foundNotes, sortAndPage, MAIN_NOTES_PAGE_VIEW);
     }
 
     @GetMapping(value = "/export/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
@@ -108,10 +113,10 @@ public class NoteController {
     }
 
     @DeleteMapping("/{id}")
-    public RedirectView deleteNote(@PathVariable String id) {
+    public ResponseEntity<String> deleteNote(@PathVariable String id) {
         log.info("deleting note {}id", id);
         noteService.deleteNote(id);
 
-        return new RedirectView(MAIN_NOTES_PAGE_VIEW);
+        return ResponseEntity.ok("Delete successful");
     }
 }
