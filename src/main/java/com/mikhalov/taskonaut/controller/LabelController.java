@@ -29,7 +29,7 @@ public class LabelController {
 
     @PostMapping
     public RedirectView createLabel(@ModelAttribute LabelDTO label, @RequestParam("noteId") String noteId) {
-        log.info("creating new label {} for note {}id", label, noteId);
+        log.trace("creating new label {} for note {}id", label, noteId);
 
         labelService.createLabel(label, noteId);
 
@@ -39,7 +39,7 @@ public class LabelController {
     @PutMapping
     public RedirectView addNoteToLabel(@RequestParam(name = "labelId") String labelId,
                                        @RequestParam(name = "noteId") String noteId) {
-        log.info("adding note '{}' to label '{}'", noteId, labelId);
+        log.trace("adding note '{}' to label '{}'", noteId, labelId);
 
         labelService.addNoteToLabel(noteId, labelId);
 
@@ -50,12 +50,12 @@ public class LabelController {
     public ModelAndView getSortedNotesByLabelName(@ModelAttribute @Valid SortAndPageDTO sortAndPage,
                                                   @PathVariable String name,
                                                   ModelAndView modelAndView) {
-        log.info("getting label '{}'\nSorting params: {}, {}",
+        log.trace("getting label '{}'\nSorting params: {}, {}",
                 name, sortAndPage, sortAndPage.isAsc() ? "asc" : "desc");
 
         List<LabelDTO> labels = labelService.getAllLabels();
         var notesByLabelName = noteService.getSortedNotesByLabelName(name, sortAndPage);
-        log.info("successful done");
+        log.trace("successful done");
 
         return modelAndViewUtil
                 .getPagingModelAndView(modelAndView, labels, notesByLabelName, sortAndPage, "/label");
@@ -63,6 +63,7 @@ public class LabelController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteLabel(@PathVariable String id) {
+        log.trace("delete label '{}'", id);
         labelService.deleteLabel(id);
 
         return ResponseEntity.ok("Delete successful");

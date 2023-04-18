@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 @ConditionalOnProperty(name = "flyway.config.enabled", havingValue = "true", matchIfMissing = true)
 public class FlywayConfig {
     private final DataSource dataSource;
+
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
         Flyway flyway = Flyway.configure()

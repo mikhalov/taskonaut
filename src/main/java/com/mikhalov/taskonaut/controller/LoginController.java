@@ -36,7 +36,6 @@ public class LoginController {
 
     @GetMapping()
     public ModelAndView loginPage(ModelAndView modelAndView) {
-        log.info("login page");
         modelAndView.addObject(new UserRegistrationDTO());
         modelAndView.setViewName(LOGIN_VIEW);
         return modelAndView;
@@ -52,7 +51,7 @@ public class LoginController {
         modelAndView.setViewName(LOGIN_VIEW);
 
         if (bindingResult.hasErrors()) {
-            log.info("has errors");
+            log.debug("has errors");
 
             return modelAndView;
         }
@@ -62,14 +61,14 @@ public class LoginController {
 
             return authentication(userRegistrationDTO, response);
         } catch (DataIntegrityViolationException e) {
-            log.info("Registration failed due to duplicate email.");
+            log.error("Registration failed due to duplicate email: '{}'", userRegistrationDTO.getEmail());
             bindingResult.rejectValue(
                     "email",
                     "error.userRegistrationDTO",
                     "An account with this email already exists."
             );
         } catch (Exception e) {
-            log.error("Registration failed due to an unexpected error.", e);
+            log.error("Registration failed due to an unexpected error. User '{}'", userRegistrationDTO.getEmail(), e);
             modelAndView.addObject(
                     "generalError",
                     "An unexpected error occurred. Please try again."
@@ -83,7 +82,7 @@ public class LoginController {
     public ModelAndView authentication(
             @ModelAttribute UserRegistrationDTO userRegistrationDTO,
             HttpServletResponse response) {
-        log.info("authentication");
+        log.trace("authentication for user '{}'", userRegistrationDTO.getEmail());
         ModelAndView modelAndView = new ModelAndView();
         try {
             Authentication authRequest = new UsernamePasswordAuthenticationToken(

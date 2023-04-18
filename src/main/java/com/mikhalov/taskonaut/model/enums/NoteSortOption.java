@@ -14,5 +14,4 @@ public enum NoteSortOption {
     private final String value;
 
 
-
 }

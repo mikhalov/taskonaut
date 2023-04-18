@@ -65,7 +65,6 @@ class NoteServiceTest {
                     case TITLE -> note.getTitle();
                     case CREATION_DATE -> note.getCreationDate().toString();
                     case LAST_MODIFIED -> note.getLastModifiedDate().toString();
-                    default -> throw new IllegalArgumentException("Unsupported sort option: " + sort);
                 });
         if (!ascending) {
             comparator = comparator.reversed();
@@ -82,13 +81,78 @@ class NoteServiceTest {
 
         when(noteMapper.toNote(noteDTO)).thenReturn(note);
         when(userService.getCurrentUser()).thenReturn(user);
+        when(noteRepository.save(note)).thenReturn(note);
+
         noteService.createNote(noteDTO);
+
 
         verify(noteMapper, times(1)).toNote(noteDTO);
         verify(userService, times(1)).getCurrentUser();
         verify(note, times(1)).setUser(user);
         verify(noteRepository, times(1)).save(note);
 
+    }
+
+    @Test
+    void testUpdateNote() {
+        NoteDTO noteDTO = mock(NoteDTO.class);
+        Note note = mock(Note.class);
+
+        when(noteDTO.getId()).thenReturn("noteId");
+        when(noteRepository.findById("noteId")).thenReturn(Optional.of(note));
+        doNothing().when(noteMapper).updateNote(noteDTO, note);
+        when(noteRepository.save(note)).thenReturn(note);
+
+        noteService.updateNote(noteDTO);
+
+        verify(noteRepository, times(1)).findById("noteId");
+        verify(noteMapper, times(1)).updateNote(noteDTO, note);
+        verify(noteRepository, times(1)).save(note);
+    }
+
+    @Test
+    void testDeleteNote() {
+        String noteId = "noteId";
+        Note note = mock(Note.class);
+
+        when(noteRepository.findById(noteId)).thenReturn(Optional.of(note));
+        doNothing().when(note).removeLabel();
+        doNothing().when(noteRepository).delete(note);
+
+        noteService.deleteNote(noteId);
+
+        verify(noteRepository, times(1)).findById(noteId);
+        verify(note, times(1)).removeLabel();
+        verify(noteRepository, times(1)).delete(note);
+    }
+
+    @Test
+    void testGetNoteById() {
+        String noteId = "noteId";
+        Note note = mock(Note.class);
+
+        when(noteRepository.findById(noteId)).thenReturn(Optional.of(note));
+
+        Note result = noteService.getNoteById(noteId);
+
+        assertEquals(note, result);
+        verify(noteRepository, times(1)).findById(noteId);
+    }
+
+    @Test
+    void testGetNoteDTOById() {
+        String noteId = "noteId";
+        Note note = mock(Note.class);
+        NoteDTO noteDTO = mock(NoteDTO.class);
+
+        when(noteRepository.findById(noteId)).thenReturn(Optional.of(note));
+        when(noteMapper.toNoteDTO(note)).thenReturn(noteDTO);
+
+        NoteDTO result = noteService.getNoteDTOById(noteId);
+
+        assertEquals(noteDTO, result);
+        verify(noteRepository, times(1)).findById(noteId);
+        verify(noteMapper, times(1)).toNoteDTO(note);
     }
 
     @Test
@@ -203,7 +267,6 @@ class NoteServiceTest {
         when(noteRepository.findAll(any(Specification.class), any(PageRequest.class))).thenAnswer(invocation -> {
             PageRequest pageRequest = invocation.getArgument(1);
             int start = pageRequest.getPageNumber() * pageRequest.getPageSize();
-            int end = Math.min(start + pageRequest.getPageSize(), noteList.size());
             Comparator<Note> comparator = getNoteComparator(sortAndPageDTO.getSort(), sortAndPageDTO.isAsc());
             List<Note> resultList = noteList.stream()
                     .sorted(comparator)
