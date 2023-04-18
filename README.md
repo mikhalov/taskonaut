@@ -17,16 +17,13 @@ Taskonaut is a task management and note-taking application that helps users stay
     - Share tasks with other users or assign tasks to them.
 - Note-Taking:
     - Create, read, update, and delete notes.
-    - Organize notes into notebooks or folders.
+    - Organize notes by labels.
     - Support rich text formatting.
     - Add images, attachments, or embedded media to notes.
     - Share notes with other users or collaborate in real-time.
 - Notifications and Alerts:
     - Send email or push notifications for deadlines and reminders.
     - Integrate Telegram API for notifications and reminders.
-- User Preferences and Settings:
-    - Customize the app's theme, colors, and fonts.
-    - Choose date and time formats.
     - Configure notification preferences.
 
 ## Getting Started
