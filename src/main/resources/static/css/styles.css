@@ -178,6 +178,12 @@ body {
     align-items: center;
 }
 
+#exportButton {
+    display: none;
+}
+
+
+
 @media (max-width: 768px) {
     .nav-search input[type="text"] {
         width: 100%;

@@ -24,6 +24,10 @@ public class Label {
     @ToString.Exclude
     private List<Note> notes = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public void addNote(Note note) {
         notes.add(note);
         note.setLabel(this);
@@ -33,9 +37,5 @@ public class Label {
         notes.remove(note);
         note.setLabel(null);
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
 }

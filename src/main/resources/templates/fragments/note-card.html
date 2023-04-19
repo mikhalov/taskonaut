@@ -44,7 +44,7 @@
             <div class="dropdown">
                 <div class="three-dots-container" id="menu-button" data-toggle="dropdown" aria-haspopup="true"
                      aria-expanded="false">
-                    <img th:src="@{/image/three_dots_vertical_menu_icon.png}" class="three_dots_vertical_menu">
+                    <img th:src="@{/image/three-dots-vertical-menu-icon.png}" class="three_dots_vertical_menu">
                 </div>
                 <div class="dropdown-menu" aria-labelledby="menu-button">
                     <div class="menu-element">
@@ -52,14 +52,17 @@
                         <input type="text" id="lastModifiedAt" class="last-modified" th:value="${note.lastModifiedAt}"
                                readonly>
                     </div>
-<!--                    <form id="deleteForm" th:action="@{/notes/{id}(id=${note.id})}" th:method="delete">-->
-                        <div class="menu-element">
-                            <button class="input-submit" th:attr="note-id=${note.id}"
-                                    onclick="openConfirmModal('note', this.getAttribute('note-id'))"
-                                    type="button" id="deleteNoteButton">Delete this note
-                            </button>
-                        </div>
-<!--                    </form>-->
+                    <div class="menu-element">
+                        <button class="input-submit"  th:attr="note-id=${note.id}"
+                                onclick="openConfirmModal('note', this.getAttribute('note-id'))"
+                                type="button" id="deleteNoteButton">Delete this note
+                        </button>
+                    </div>
+                    <div class="menu-element">
+                        <button class="input-submit"  th:attr="note-id=${note.id}"
+                                onclick="sendNoteToTelegram(this.getAttribute('note-id'))">Send note to telegram
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

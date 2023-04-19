@@ -67,12 +67,3 @@ function exportNotes() {
     location.href = `/notes/export/pdf?sort=${sortValue}&asc=${ascValue}`;
 }
 
-$(document).ready(function () {
-    const currentPath = window.location.pathname;
-
-    if (currentPath === '/notes') {
-        $('#exportButton').show();
-    } else {
-        $('#exportButton').hide();
-    }
-});

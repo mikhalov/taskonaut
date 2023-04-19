@@ -91,6 +91,16 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    const currentPath = window.location.pathname;
+
+    if (currentPath === '/notes') {
+        $('#exportButton').show();
+    } else {
+        $('#exportButton').hide();
+    }
+});
+
 let currentId = null;
 let currentType = null;
 

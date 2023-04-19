@@ -18,13 +18,13 @@
                         </a>
                     </li>
                     <li th:if="${sortAndPage.page > 0}" class="nav-page-item">
-                        <div th:replace="fragments/page-list-fragment :: nav_item (${sortAndPage.page - 1})"></div>
+                        <div th:replace="fragments/page-list :: nav_item (${sortAndPage.page - 1})"></div>
                     </li>
                     <li class="nav-page-item active">
-                        <div th:replace="fragments/page-list-fragment :: nav_item (${sortAndPage.page})"></div>
+                        <div th:replace="fragments/page-list :: nav_item (${sortAndPage.page})"></div>
                     </li>
                     <li th:if="${sortAndPage.page + 1 < sortAndPage.totalPages}" class="nav-page-item">
-                        <div th:replace="fragments/page-list-fragment :: nav_item (${sortAndPage.page + 1})"></div>
+                        <div th:replace="fragments/page-list :: nav_item (${sortAndPage.page + 1})"></div>
 
                     </li>
                     <li class="nav-page-item">

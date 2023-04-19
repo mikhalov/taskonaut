@@ -98,7 +98,7 @@ public class NoteController {
         log.trace("getting by {}id", id);
         NoteDTO note = noteService.getNoteDTOById(id);
         modelAndView.addObject("note", note);
-        modelAndView.setViewName("fragments/form-fragment");
+        modelAndView.setViewName("fragments/form");
 
         return modelAndView;
     }

@@ -14,4 +14,6 @@ public interface LabelRepository extends JpaRepository<Label, String>, JpaSpecif
 
     List<Label> findAllByUserEmail(String userEmail);
 
+    List<Label> findAllByUserTelegramChatIdOrderByName(long telegramChatId);
+
 }

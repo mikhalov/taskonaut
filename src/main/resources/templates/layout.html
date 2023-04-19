@@ -3,7 +3,7 @@
 
 <head>
     <title th:text="${title}">Title</title>
-    <link rel="icon" th:href="@{/image/notes_icon.svg}" type="image/svg+xml">
+    <link rel="icon" th:href="@{/image/notes-icon.svg}" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
@@ -28,8 +28,8 @@
         <nav class="custom-navbar custom-navbar-border">
             <div class="nav-content">
                 <div class="nav-content-left">
-                    <img th:src="@{/image/menu_burger_icon.svg}" id="sidebar-btn">
-                    <img th:src="@{/image/notes_icon.svg}" id="notes-icon">
+                    <img th:src="@{/image/menu-burger-icon.svg}" id="sidebar-btn">
+                    <img th:src="@{/image/notes-icon.svg}" id="notes-icon">
                     <h3 id="nav-title"></h3>
                 </div>
                 <form id="navSearch" class="nav-search nav-content-center" action="/notes/search" th:method="get">
@@ -38,7 +38,7 @@
                     </div>
                     <input type="text" name="keyword" placeholder="Search" autocomplete="off">
                     <div id="cancel-btn">
-                        <img th:src="@{/image/cancel_icon.svg}">
+                        <img th:src="@{/image/cancel-icon.svg}">
                     </div>
                 </form>
                 <div class="nav-content-right">
@@ -54,7 +54,7 @@
             <th:block th:each="label : ${labels}">
                 <div class="label-container">
                     <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"> </a>
-                    <img th:src="@{/image/trash_icon1.svg}" id="trash-icon" th:attr="label-id=${label.id}"
+                    <img th:src="@{/image/trash-icon1.svg}" id="trash-icon" th:attr="label-id=${label.id}"
                          onclick="openConfirmModal('label', this.getAttribute('label-id'))" alt="Delete Label"/>
                 </div>
             </th:block>
@@ -78,5 +78,6 @@
     <script th:src="@{/js/card-footer-menu.js}" defer></script>
     <script th:src="@{/js/new-note-creation.js}" defer></script>
     <script th:src="@{/js/sorting-and-paging.js}"></script>
+    <script th:src="@{/js/telegram.js}"></script>
 </footer>
 </html>

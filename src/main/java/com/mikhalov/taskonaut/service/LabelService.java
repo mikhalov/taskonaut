@@ -49,18 +49,16 @@ public class LabelService {
         addNoteToLabel(note, label);
     }
 
-    private Label addNoteToLabel(Note note, Label label) {
+    private void addNoteToLabel(Note note, Label label) {
         label.addNote(note);
-        return labelRepository.save(label);
+        labelRepository.save(label);
     }
 
     public List<LabelDTO> getAllLabels() {
         String email = userService.getCurrentUserUsername();
+        List<Label> labels = labelRepository.findAllByUserEmail(email);
 
-        return labelRepository.findAllByUserEmail(email)
-                .stream()
-                .map(labelMapper::toLabelDTO)
-                .toList();
+        return labelMapper.toLabelDTOList(labels);
     }
 
     @Transactional
@@ -85,4 +83,9 @@ public class LabelService {
                 .orElseThrow(() -> new EntityNotFoundException("Label not found with id: " + id));
     }
 
+    public List<LabelDTO> getAllLabelsByChatId(Long chatId) {
+        List<Label> labels = labelRepository.findAllByUserTelegramChatIdOrderByName(chatId);
+
+        return labelMapper.toLabelDTOList(labels);
+    }
 }

@@ -162,5 +162,14 @@ public class NoteService {
         return noteMapper.toNoteDTO(note);
     }
 
+    public List<String> getAllTitlesByLabelId(long telegramChatId, String labelId) {
+        return noteRepository.findDistinctNoteTitlesByLabelIdAndTelegramChatId(labelId, telegramChatId);
+    }
+
+    public List<NoteDTO> getNotesByTitleAndLabelId(long chatId, String noteTitle, String labelId) {
+        List<Note> notes = noteRepository.findAllByTitleAndLabelIdAndUserTelegramChatIdOrderByLastModifiedDateDesc(noteTitle, labelId, chatId);
+
+        return noteMapper.toNoteDTOList(notes);
+    }
 }
 

@@ -28,6 +28,9 @@ public class User {
 
     private String password;
 
+    @Column(name = "telegram_chat_id")
+    private Long telegramChatId;
+
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")
     private UserRole role;

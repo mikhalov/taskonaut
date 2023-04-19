@@ -46,4 +46,14 @@ public class UserService {
                 .getName();
     }
 
+    public void setCurrentUserTelegramChatId(long chatId) {
+        User user = getCurrentUser();
+        user.setTelegramChatId(chatId);
+
+        userRepository.save(user);
+    }
+
+    public Long getCurrentUserTelegramChatId() {
+        return getCurrentUser().getTelegramChatId();
+    }
 }

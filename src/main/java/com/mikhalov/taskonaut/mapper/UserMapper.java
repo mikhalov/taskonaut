@@ -8,5 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "role", ignore = true)
+    @Mapping(target = "telegramChatId", ignore = true)
     User toUser(UserRegistrationDTO userRegistrationDTO);
 }
