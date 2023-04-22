@@ -1,0 +1,21 @@
+.three-dots-container {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.three-dots-container:hover {
+  background-color: #5A5A5A;
+  border-radius: 35%;
+}
+
+.three_dots_vertical_menu {
+  width: 20px;
+  height: 20px;
+  vertical-align: sub;
+  filter: invert(95%);
+}
+
+

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Note Card Fragment</title>
+</head>
+
+<body>
+<div class="grid-item" th:fragment="note-card (note)">
+    <div class="card">
+        <div class="card-body" th:attr="note-id=${note.id}" onclick="openModal(this.getAttribute('note-id'))">
+            <div class="card-title" th:utext="${note.title}"></div>
+            <p class="card-text" th:utext="${note.content}"></p>
+        </div>
+        <div class="card-footer">
+            <div class="custom-dropdown">
+                <button class="custom-dropdown-button" onclick="toggleDropdown(event)"
+                        th:text="${note.labelDTO} ? ${note.labelDTO.name} : 'Add label'"></button>
+                <div class="custom-dropdown-content">
+                    <form th:action="@{/labels}" th:object="${label}" th:method="post">
+                        <div class="menu-element">
+                            <input type="text" id="label-name" th:field="*{name}" placeholder="Enter label name"
+                                   required
+                                   maxlength="20" autocomplete="off">
+                            <input type="hidden" name="noteId" th:value="${note.id}">
+                            <button type="submit" class="input-submit"
+                                    th:text="${note.labelDTO} ? 'Change' : 'Add'"></button>
+                        </div>
+                    </form>
+                    <div class="exist-labels">
+                        <div class="each-label" id="label-list" th:each="label : ${labels}">
+                            <form th:action="@{/labels}" th:method="put">
+                                <div class="menu-element">
+                                    <input type="submit" th:value="${label.name}">
+                                    <input type="hidden" name="noteId" th:value="${note.id}">
+                                    <input type="hidden" name="labelId" th:value="${label.id}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="three-dots-container" id="menu-button" data-toggle="dropdown" aria-haspopup="true"
+                     aria-expanded="false">
+                    <img th:src="@{/image/three-dots-vertical-menu-icon.png}" class="three_dots_vertical_menu">
+                </div>
+                <div class="dropdown-menu" aria-labelledby="menu-button">
+                    <div class="menu-element">
+                        <label for="lastModifiedAt" class="last-modified-label">Last modified at:</label>
+                        <input type="text" id="lastModifiedAt" class="last-modified" th:value="${note.lastModifiedAt}"
+                               readonly>
+                    </div>
+                    <div class="menu-element">
+                        <button class="input-submit"  th:attr="note-id=${note.id}"
+                                onclick="openConfirmModal('note', this.getAttribute('note-id'))"
+                                type="button" id="deleteNoteButton">Delete this note
+                        </button>
+                    </div>
+                    <div class="menu-element">
+                        <button class="input-submit"  th:attr="note-id=${note.id}"
+                                onclick="sendNoteToTelegram(this.getAttribute('note-id'))">Send note to telegram
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

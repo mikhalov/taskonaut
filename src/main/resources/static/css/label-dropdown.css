@@ -1,0 +1,118 @@
+.custom-dropdown {
+    min-width: 40px;
+    position: relative;
+    display: inline-block;
+    user-select: none;
+    cursor: pointer;
+}
+
+.custom-dropdown-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #f5f5f5;
+}
+
+.custom-dropdown-content,
+.dropdown-menu {
+    overflow: hidden;
+    min-width: 200px;
+    max-width: 200px;
+    display: none;
+    position: absolute;
+    z-index: 999;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: left;
+    background-color: #202124;
+    border-radius: 5px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.575);
+    left: 0;
+
+}
+
+.show {
+    display: block;
+}
+
+.menu-element {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.exist-labels {
+    max-height: 200px;
+    overflow: auto;
+}
+
+.menu-element * {
+    background: transparent;
+    color: #f5f5f5;
+    display: block;
+    font-size: 14px;
+    width: 100%;
+    padding: 3px 3px;
+    text-align: left;
+    border: none;
+}
+
+.input-submit,
+.dropdown-item {
+    cursor: pointer;
+}
+
+.last-modified,
+.last-modified-label {
+    pointer-events: none;
+    user-select: none;
+    cursor: default;
+}
+
+.input-submit:hover,
+.dropdown-item:hover {
+    background-color: #2a2a2a;
+}
+
+
+
+#label-name {
+    border: 1px solid #5a5a5a;
+    border-radius: 5px;
+    color: #f5f5f5;
+    display: block;
+    width: 100%;
+    background-color: transparent;
+    cursor: text;
+    text-align: left;
+    margin-bottom: 5px;
+    padding: 5px 3px;
+}
+
+
+#label-name::placeholder {
+    user-select: none;
+    color: #f5f5f5;
+    line-height: 44px;
+}
+
+
+#label-name:focus {
+    outline: none;
+}
+
+#label-name:focus-within {
+    background-color: #5a5a5a;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+

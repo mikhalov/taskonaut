@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${#httpServletRequest.getAttribute('name')}"></title>
+    <th:block th:insert="layout :: head"> </th:block>
+</head>
+
+<body onload="initMasonry();">
+<th:block th:replace="fragments/notes-body :: bodyFragment"></th:block>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title th:text="${title}">Title</title>
+    <link rel="icon" th:href="@{/image/notes-icon.svg}" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/three-dots.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/note-input.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/label-dropdown.css}">
+    <link rel="stylesheet"
+          href="https://cdn.rawgit.com/CoffeePerry/simplemde-theme-bootstrap-dark/master/dist/simplemde-theme-bootstrap-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
+    <script th:src="@{/js/masonry.js}" async></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('nav-title').innerText = document.querySelector('title').innerText;
+        });
+    </script>
+</head>
+<body>
+<header>
+    <div class="overlay" id="overlay"></div>
+    <div class="nav-sidebar-container">
+        <nav class="custom-navbar custom-navbar-border">
+            <div class="nav-content">
+                <div class="nav-content-left">
+                    <img th:src="@{/image/menu-burger-icon.svg}" id="sidebar-btn">
+                    <img th:src="@{/image/notes-icon.svg}" id="notes-icon">
+                    <h3 id="nav-title"></h3>
+                </div>
+                <form id="navSearch" class="nav-search nav-content-center" action="/notes/search" th:method="get">
+                    <div id="magnifier-btn">
+                        <img th:src="@{/image/magnifier-icon.svg}">
+                    </div>
+                    <input type="text" name="keyword" placeholder="Search" autocomplete="off">
+                    <div id="cancel-btn">
+                        <img th:src="@{/image/cancel-icon.svg}">
+                    </div>
+                </form>
+                <div class="nav-content-right">
+                    <button id="exportButton" class="transparent-back-btn" onclick="exportNotes()">Export</button>
+                    <button class="transparent-back-btn" onclick="location.href='/logout'">Logout</button>
+                </div>
+            </div>
+        </nav>
+        <div class="sidebar" id="sidebar">
+            <div class="label-container">
+                <a class="nav-link" th:href="@{/notes}">Notes</a>
+            </div>
+            <th:block th:each="label : ${labels}">
+                <div class="label-container">
+                    <a th:href="@{/labels/{name}(name=${label.name})}" th:text="${label.name}"> </a>
+                    <img th:src="@{/image/trash-icon1.svg}" id="trash-icon" th:attr="label-id=${label.id}"
+                         onclick="openConfirmModal('label', this.getAttribute('label-id'))" alt="Delete Label"/>
+                </div>
+            </th:block>
+        </div>
+    </div>
+    <div id="confirmationModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <h4 id="confirmModalTitle">Confirm Deletion</h4>
+            <p id="confirmModalText">Are you sure you want to delete this item?</p>
+            <button class="transparent-back-btn" id="confirmDelete" onclick="deleteItem()">Yes</button>
+            <button class="transparent-back-btn" onclick="closeConfirmModal()">No</button>
+        </div>
+    </div>
+</header>
+</body>
+<footer>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/nav-and-sidebar.js}" async></script>
+    <script th:src="@{/js/edit-modal.js}" defer></script>
+    <script th:src="@{/js/card-footer-menu.js}" defer></script>
+    <script th:src="@{/js/new-note-creation.js}" defer></script>
+    <script th:src="@{/js/sorting-and-paging.js}"></script>
+    <script th:src="@{/js/telegram.js}"></script>
+</footer>
+</html>
