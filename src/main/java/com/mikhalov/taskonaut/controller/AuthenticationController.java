@@ -1,16 +1,12 @@
 package com.mikhalov.taskonaut.controller;
 
-import com.mikhalov.taskonaut.dto.UserRegistrationDTO;
-import com.mikhalov.taskonaut.jwt.JwtUtil;
+import com.mikhalov.taskonaut.dto.SignInDTO;
+import com.mikhalov.taskonaut.service.AuthenticationService;
 import com.mikhalov.taskonaut.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,27 +23,26 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/login")
 @RequiredArgsConstructor
-public class LoginController {
+public class AuthenticationController {
 
     private static final String LOGIN_VIEW = "/login";
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
     @GetMapping()
     public ModelAndView loginPage(ModelAndView modelAndView) {
-        modelAndView.addObject(new UserRegistrationDTO());
+        modelAndView.addObject(new SignInDTO());
         modelAndView.setViewName(LOGIN_VIEW);
         return modelAndView;
     }
 
     @PostMapping("/signup")
     public ModelAndView signup(
-            @Valid @ModelAttribute UserRegistrationDTO userRegistrationDTO,
+            @Valid @ModelAttribute SignInDTO signInDTO,
             BindingResult bindingResult,
             ModelAndView modelAndView,
             HttpServletResponse response) {
-        log.info("signup email '{}'", userRegistrationDTO.getEmail());
+        log.info("signup email '{}'", signInDTO.getEmail());
         modelAndView.setViewName(LOGIN_VIEW);
 
         if (bindingResult.hasErrors()) {
@@ -57,18 +52,18 @@ public class LoginController {
         }
 
         try {
-            userService.createUser(userRegistrationDTO);
+            userService.createUser(signInDTO);
 
-            return authentication(userRegistrationDTO, response);
+            return authentication(signInDTO, response);
         } catch (DataIntegrityViolationException e) {
-            log.error("Registration failed due to duplicate email: '{}'", userRegistrationDTO.getEmail());
+            log.error("Registration failed due to duplicate email: '{}'", signInDTO.getEmail());
             bindingResult.rejectValue(
                     "email",
                     "error.userRegistrationDTO",
                     "An account with this email already exists."
             );
         } catch (Exception e) {
-            log.error("Registration failed due to an unexpected error. User '{}'", userRegistrationDTO.getEmail(), e);
+            log.error("Registration failed due to an unexpected error. User '{}'", signInDTO.getEmail(), e);
             modelAndView.addObject(
                     "generalError",
                     "An unexpected error occurred. Please try again."
@@ -80,21 +75,13 @@ public class LoginController {
 
     @PostMapping("/auth")
     public ModelAndView authentication(
-            @ModelAttribute UserRegistrationDTO userRegistrationDTO,
+            @ModelAttribute SignInDTO signInDTO,
             HttpServletResponse response) {
-        log.trace("authentication for user '{}'", userRegistrationDTO.getEmail());
+        log.trace("authentication for user '{}'", signInDTO.getEmail());
         ModelAndView modelAndView = new ModelAndView();
         try {
-            Authentication authRequest = new UsernamePasswordAuthenticationToken(
-                    userRegistrationDTO.getEmail(),
-                    userRegistrationDTO.getPassword()
-            );
-            Authentication authResult = authenticationManager.authenticate(authRequest);
-            UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-
-            String jwtToken = jwtUtil.generateToken(userDetails);
-            Cookie authCookie = jwtUtil.createAuthCookie(jwtToken);
-
+            Cookie authCookie = authenticationService
+                    .getAuthCookiesIfCredentialsValid(signInDTO);
             response.addCookie(authCookie);
             modelAndView.setViewName("redirect:/notes");
 

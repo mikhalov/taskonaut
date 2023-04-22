@@ -3,14 +3,11 @@ package com.mikhalov.taskonaut.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
-public class UserRegistrationDTO {
+public class SignInDTO {
 
     @Email(message = "Please provide a valid email address")
     @NotBlank(message = "Email is required")

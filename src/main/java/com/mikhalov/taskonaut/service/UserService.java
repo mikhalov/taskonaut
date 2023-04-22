@@ -1,6 +1,6 @@
 package com.mikhalov.taskonaut.service;
 
-import com.mikhalov.taskonaut.dto.UserRegistrationDTO;
+import com.mikhalov.taskonaut.dto.SignInDTO;
 import com.mikhalov.taskonaut.mapper.UserMapper;
 import com.mikhalov.taskonaut.model.User;
 import com.mikhalov.taskonaut.model.enums.UserRole;
@@ -20,8 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public void createUser(UserRegistrationDTO userRegistrationDTO) {
-        User user = userMapper.toUser(userRegistrationDTO);
+    public void createUser(SignInDTO signInDTO) {
+        User user = userMapper.toUser(signInDTO);
         user.setRole(UserRole.USER);
         String encoded = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(encoded);
