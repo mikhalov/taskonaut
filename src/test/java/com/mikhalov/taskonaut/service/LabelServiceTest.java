@@ -110,14 +110,14 @@ class LabelServiceTest {
 
         when(userService.getCurrentUserUsername()).thenReturn(email);
         when(labelRepository.findAllByUserEmail(email)).thenReturn(labels);
-        when(labelMapper.toLabelDTO(any(Label.class))).thenReturn(mock(LabelDTO.class));
+        when(labelMapper.toLabelDTOList(labels)).thenReturn(List.of(mock(LabelDTO.class), mock(LabelDTO.class)));
 
         List<LabelDTO> labelDTOs = labelService.getAllLabels();
 
         assertEquals(labels.size(), labelDTOs.size());
         verify(userService, times(1)).getCurrentUserUsername();
         verify(labelRepository, times(1)).findAllByUserEmail(email);
-        verify(labelMapper, times(labels.size())).toLabelDTO(any(Label.class));
+        verify(labelMapper, times(1)).toLabelDTOList(labels);
     }
 
     @Test

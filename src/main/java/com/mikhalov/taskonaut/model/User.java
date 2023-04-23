@@ -34,4 +34,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")
     private UserRole role;
+
+    public void removeChatId() {
+        this.telegramChatId = null;
+    }
 }

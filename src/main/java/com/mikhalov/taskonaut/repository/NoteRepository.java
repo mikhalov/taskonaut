@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note, String>, JpaSpecificationExecutor<Note> {
@@ -24,5 +25,8 @@ public interface NoteRepository extends JpaRepository<Note, String>, JpaSpecific
     );
 
     List<Note> findAllByTitleAndLabelIdAndUserTelegramChatIdOrderByLastModifiedDateDesc(
-            String title, String labelId, Long chatId);
+            String title, String labelId, Long chatId
+    );
+
+    Optional<Note> findByIdAndUserEmail(String id, String email);
 }

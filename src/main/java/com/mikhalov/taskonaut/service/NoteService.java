@@ -152,8 +152,12 @@ public class NoteService {
     }
 
     public Note getNoteById(String id) {
-        return noteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Note not found with id: " + id));
+        String email = userService.getCurrentUserUsername();
+
+        return noteRepository.findByIdAndUserEmail(id, email)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Note not found for current user %s with id %s: ", email, id)
+                ));
     }
 
     public NoteDTO getNoteDTOById(String id) {
@@ -171,5 +175,6 @@ public class NoteService {
 
         return noteMapper.toNoteDTOList(notes);
     }
+
 }
 

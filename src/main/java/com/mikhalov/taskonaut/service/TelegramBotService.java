@@ -3,6 +3,11 @@ package com.mikhalov.taskonaut.service;
 import com.mikhalov.taskonaut.dto.LabelDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.exception.ExecuteNoteMessageException;
+import com.mikhalov.taskonaut.exception.TelegramAccountAlreadyConnected;
+import com.mikhalov.taskonaut.exception.TelegramBotHasNotConnectedException;
+import com.mikhalov.taskonaut.exception.TelegramConnectionTokenException;
+import com.mikhalov.taskonaut.model.User;
+import com.mikhalov.taskonaut.util.UUIDTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,25 +36,28 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private final UserService userService;
     private final LabelService labelService;
     private final NoteService noteService;
+    private final UUIDTokenUtil tokenUtil;
     @Value("${telegram.bot.username}")
     private String botUsername;
 
     public TelegramBotService(@Value("${telegram.bot.token}") String botToken,
                               @Autowired UserService userService,
                               @Autowired LabelService labelService,
+                              @Autowired UUIDTokenUtil tokenUtil,
                               @Autowired NoteService noteService) {
         super(botToken);
         this.userService = userService;
         this.labelService = labelService;
         this.noteService = noteService;
+        this.tokenUtil = tokenUtil;
         initCommands();
 
     }
 
     private void initCommands() {
         List<BotCommand> listOfCommands = new ArrayList<>();
-        listOfCommands.add(new BotCommand("/start", "get a welcome message"));
         listOfCommands.add(new BotCommand("/all_labels", "get all available labels"));
+        listOfCommands.add(new BotCommand("/unlink", "cancel current connection with Taskonaut"));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -64,30 +72,82 @@ public class TelegramBotService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String inputText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
-            switch (inputText) {
-                case "/start" -> sendWelcomeMessage(chatId);
-                case "/all_labels" -> sendLabelsList(chatId);
-
-                default -> sendWelcomeMessage(chatId);
+            String inputText = update.getMessage().getText();
+            if (inputText.startsWith("/start")) {
+                executeTokenAndSaveChatIdToUser(chatId, inputText);
+            } else if (isCurrentBotUserHasNotAlreadyAuth(chatId)) {
+                sendMessage(chatId, "You need to connect this bot with your Taskonaut account");
+            } else {
+                executeMessage(update);
             }
         } else if (update.hasCallbackQuery()) {
-            String callbackData = update.getCallbackQuery().getData();
             long chatId = update.getCallbackQuery().getMessage().getChatId();
-            if (callbackData.startsWith(LABELS_MENU)) {
-                String labelId = callbackData.substring(LABELS_MENU.length());
-                sendNotesByLabelId(chatId, labelId);
-            } else if (callbackData.startsWith(TITLES_MENU)) {
-                String[] split = callbackData.split(";");
-                String noteTitle = split[2];
-                String labelId = split[1];
-                sendNotesByTitleAndLabelId(chatId, noteTitle, labelId);
+            if (isCurrentBotUserHasNotAlreadyAuth(chatId)) {
+                sendMessage(chatId, "You need to connect this bot with your Taskonaut account");
+            } else {
+                executeCallback(update);
             }
-
         }
+    }
+
+    private void executeMessage(Update update) {
+        Long chatId = update.getMessage().getChatId();
+        String inputText = update.getMessage().getText();
+        log.trace("chat id '{}', message: {}", chatId, inputText);
+        switch (inputText) {
+            case "/all_labels" -> sendLabelsList(chatId);
+            case "/unlink" -> unlinkConnection(chatId);
+            default -> sendWelcomeMessage(chatId);
+        }
+    }
+
+
+    private void unlinkConnection(Long chatId) {
+        userService.removeChatIdFromUser(chatId);
+        String successfulUnlinked = "Account has been unlinked successful";
+
+        sendMessage(chatId, successfulUnlinked);
+    }
+
+    private void executeCallback(Update update) {
+        String callbackData = update.getCallbackQuery().getData();
+        long chatId = update.getCallbackQuery().getMessage().getChatId();
+        if (callbackData.startsWith(LABELS_MENU)) {
+            String labelId = callbackData.substring(LABELS_MENU.length());
+            sendNotesByLabelId(chatId, labelId);
+        } else if (callbackData.startsWith(TITLES_MENU)) {
+            String[] split = callbackData.split(";");
+            String noteTitle = split[2];
+            String labelId = split[1];
+            sendNotesByTitleAndLabelId(chatId, noteTitle, labelId);
+        }
+    }
+
+    private void executeTokenAndSaveChatIdToUser(Long chatId, String inputText) {
+        String token = inputText.replace("/start ", "");
+        try {
+            String userId = tokenUtil.getUserIdFromToken(token);
+            userService.setTelegramChatIdByUserId(chatId, userId);
+            String successful = "Connected with Tasconaut app. \nNow you can use me";
+
+            sendMessage(chatId, successful);
+        } catch (TelegramAccountAlreadyConnected e) {
+            String alreadyConnected = """
+                    Your telegram account already connected with Taskanaut profile.
+                    Use /unlink to cancel this connection""";
+            sendMessage(chatId, alreadyConnected);
+        } catch (TelegramConnectionTokenException e) {
+            log.error(e.getMessage(), e);
+            sendMessage(chatId, e.getMessage());
+        }
+    }
+
+    private boolean isCurrentBotUserHasNotAlreadyAuth(long chatId) {
+        log.info("is auth");
+
+        return !userService.isChatIdRegisteredByUser(chatId);
     }
 
     private void sendNotesByTitleAndLabelId(long chatId, String noteTitle, String labelId) {
@@ -164,25 +224,32 @@ public class TelegramBotService extends TelegramLongPollingBot {
     }
 
     private void sendWelcomeMessage(long chatId) {
-        SendMessage welcomeMessage = new SendMessage();
-        welcomeMessage.setChatId(chatId);
-        welcomeMessage.setText("Welcome to the Taskonaut bot!");
+        String welcome = "Welcome to the Taskonaut bot!";
+
+        sendMessage(chatId, welcome);
+    }
+
+    private void sendMessage(long chatId, String messageText) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(messageText);
         try {
-            execute(welcomeMessage);
+            execute(message);
         } catch (TelegramApiException e) {
             log.error("error while sending welcome message, user chat id '{}'", chatId, e);
         }
     }
 
 
-    public void findAndSendNoteToUserById(String noteId) {
-        Long chatId = userService.getCurrentUserTelegramChatId();
+    public void findAndSendNoteToUserById(String noteId) throws TelegramBotHasNotConnectedException, ExecuteNoteMessageException {
+        Long chatId = userService.getCurrentUserTelegramChatId()
+                .orElseThrow(TelegramBotHasNotConnectedException::new);
         NoteDTO noteDTO = noteService.getNoteDTOById(noteId);
 
         sendNoteToUser(chatId, noteDTO);
     }
 
-    private void sendNoteToUser(Long chatId, NoteDTO noteDTO) {
+    private void sendNoteToUser(Long chatId, NoteDTO noteDTO) throws ExecuteNoteMessageException {
         String note = formatNoteForSending(noteDTO);
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
@@ -208,8 +275,9 @@ public class TelegramBotService extends TelegramLongPollingBot {
                 .orElseThrow();
     }
 
+    public String getTokenToConnectUserWithBot() {
+        User user = userService.getCurrentUser();
 
-    private void saveChatId(long chatId) {
-        userService.setCurrentUserTelegramChatId(chatId);
+        return tokenUtil.generateDeepLinkToken(user.getId());
     }
 }
