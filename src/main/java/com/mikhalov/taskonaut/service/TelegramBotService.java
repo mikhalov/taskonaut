@@ -1,13 +1,12 @@
 package com.mikhalov.taskonaut.service;
 
-import com.mikhalov.taskonaut.dto.LabelDTO;
-import com.mikhalov.taskonaut.dto.NoteDTO;
-import com.mikhalov.taskonaut.exception.ExecuteNoteMessageException;
-import com.mikhalov.taskonaut.exception.TelegramAccountAlreadyConnected;
-import com.mikhalov.taskonaut.exception.TelegramBotHasNotConnectedException;
-import com.mikhalov.taskonaut.exception.TelegramConnectionTokenException;
+import com.mikhalov.taskonaut.dto.*;
+import com.mikhalov.taskonaut.dto.telegram.BaseCallbackData;
+import com.mikhalov.taskonaut.dto.telegram.LabelsMenuCallbackData;
+import com.mikhalov.taskonaut.dto.telegram.TitlesMenuCallbackData;
+import com.mikhalov.taskonaut.exception.*;
 import com.mikhalov.taskonaut.model.User;
-import com.mikhalov.taskonaut.util.UUIDTokenUtil;
+import com.mikhalov.taskonaut.util.TelegramBotUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,30 +29,33 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class TelegramBotService extends TelegramLongPollingBot {
-
-    private static final String LABELS_MENU = "labelId_";
-    private static final String TITLES_MENU = "noteTitle";
+    
+    private static final int TELEGRAM_MESSAGE_LIMIT = 4096;
 
     private final UserService userService;
     private final LabelService labelService;
     private final NoteService noteService;
-    private final UUIDTokenUtil tokenUtil;
+    private final TelegramBotUtil telegramUtil;
     @Value("${telegram.bot.username}")
     private String botUsername;
 
     public TelegramBotService(@Value("${telegram.bot.token}") String botToken,
                               @Autowired UserService userService,
                               @Autowired LabelService labelService,
-                              @Autowired UUIDTokenUtil tokenUtil,
+                              @Autowired TelegramBotUtil telegramUtil,
                               @Autowired NoteService noteService) {
         super(botToken);
         this.userService = userService;
         this.labelService = labelService;
         this.noteService = noteService;
-        this.tokenUtil = tokenUtil;
-        initCommands();
-
+        this.telegramUtil = telegramUtil;
     }
+
+    @PostConstruct
+    private void postConstruct() {
+        initCommands();
+    }
+
 
     private void initCommands() {
         List<BotCommand> listOfCommands = new ArrayList<>();
@@ -114,21 +117,26 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private void executeCallback(Update update) {
         String callbackData = update.getCallbackQuery().getData();
         long chatId = update.getCallbackQuery().getMessage().getChatId();
-        if (callbackData.startsWith(LABELS_MENU)) {
-            String labelId = callbackData.substring(LABELS_MENU.length());
-            sendNotesByLabelId(chatId, labelId);
-        } else if (callbackData.startsWith(TITLES_MENU)) {
-            String[] split = callbackData.split(";");
-            String noteTitle = split[2];
-            String labelId = split[1];
-            sendNotesByTitleAndLabelId(chatId, noteTitle, labelId);
+        BaseCallbackData callbackDataObj;
+        try {
+            callbackDataObj = telegramUtil.getCallbackDataValue(callbackData);
+        } catch (TelegramCallbackNotFoundException e) {
+            log.error(e.getMessage(), e);
+            sendMessage(chatId, e.getMessage());
+            return;
+        }
+
+        switch (callbackDataObj) {
+            case TitlesMenuCallbackData t ->  sendNotesByTitleAndLabelId(chatId, t.noteTitle(), t.labelId());
+            case LabelsMenuCallbackData l -> sendNotesByLabelId(chatId, l.labelId());
+            default -> throw new IllegalStateException("Unexpected value: " + callbackDataObj);
         }
     }
 
     private void executeTokenAndSaveChatIdToUser(Long chatId, String inputText) {
         String token = inputText.replace("/start ", "");
         try {
-            String userId = tokenUtil.getUserIdFromToken(token);
+            String userId = telegramUtil.getUserIdFromToken(token);
             userService.setTelegramChatIdByUserId(chatId, userId);
             String successful = "Connected with Tasconaut app. \nNow you can use me";
 
@@ -145,17 +153,13 @@ public class TelegramBotService extends TelegramLongPollingBot {
     }
 
     private boolean isCurrentBotUserHasNotAlreadyAuth(long chatId) {
-        log.info("is auth");
-
         return !userService.isChatIdRegisteredByUser(chatId);
     }
 
     private void sendNotesByTitleAndLabelId(long chatId, String noteTitle, String labelId) {
         List<NoteDTO> notes = noteService.getNotesByTitleAndLabelId(chatId, noteTitle, labelId);
 
-        notes.forEach(note -> sendNoteToUser(chatId, note));
-
-
+        notes.forEach(note -> sendNoteToBot(chatId, note));
     }
 
     private void sendNotesByLabelId(long chatId, String labelId) {
@@ -168,11 +172,15 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private InlineKeyboardMarkup createInlineKeyboardForNoteTitles(List<String> noteTitles, String labelId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
+
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>(noteTitles.stream()
                 .map(title -> {
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(title);
-                    button.setCallbackData(TITLES_MENU + ";" + labelId + ";" + title);
+                    var callbackData =
+                            new TitlesMenuCallbackData(labelId, title);
+                    String callbackDataKey = telegramUtil.generateCallbackDataKey(callbackData);
+                    button.setCallbackData(callbackDataKey);
 
                     return button;
                 })
@@ -192,7 +200,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("Error sending inline keyboard message", e);
         }
     }
 
@@ -203,7 +211,9 @@ public class TelegramBotService extends TelegramLongPollingBot {
                 .map(label -> {
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(label.getName());
-                    button.setCallbackData(LABELS_MENU + label.getId());
+                    var callbackData = new LabelsMenuCallbackData(label.getId());
+                    String callbackDataKey = telegramUtil.generateCallbackDataKey(callbackData);
+                    button.setCallbackData(callbackDataKey);
 
                     return button;
                 })
@@ -236,7 +246,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            log.error("error while sending welcome message, user chat id '{}'", chatId, e);
+            log.error("error while sending message: '{}', user chat id '{}'", messageText, chatId, e);
         }
     }
 
@@ -246,21 +256,28 @@ public class TelegramBotService extends TelegramLongPollingBot {
                 .orElseThrow(TelegramBotHasNotConnectedException::new);
         NoteDTO noteDTO = noteService.getNoteDTOById(noteId);
 
-        sendNoteToUser(chatId, noteDTO);
+        sendNoteToBot(chatId, noteDTO);
     }
 
-    private void sendNoteToUser(Long chatId, NoteDTO noteDTO) throws ExecuteNoteMessageException {
+    public void sendNoteToBot(Long chatId, NoteDTO noteDTO) throws ExecuteNoteMessageException {
         String note = formatNoteForSending(noteDTO);
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText(note);
 
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            log.error("error when executing note '{}' to user '{}'", noteDTO.getId(), chatId);
-            throw new ExecuteNoteMessageException(e);
+        if (note.length() > TELEGRAM_MESSAGE_LIMIT) {
+            splitNoteIntoMessages(note).forEach(splitNote -> sendMessage(chatId, splitNote));
+        } else {
+            sendMessage(chatId, note);
         }
+    }
+
+    private List<String> splitNoteIntoMessages(String note) {
+        List<String> messages = new ArrayList<>();
+
+        for (int i = 0; i < note.length(); i += TELEGRAM_MESSAGE_LIMIT) {
+            int endIndex = Math.min(i + TELEGRAM_MESSAGE_LIMIT, note.length());
+            messages.add(note.substring(i, endIndex));
+        }
+
+        return messages;
     }
 
     private String formatNoteForSending(NoteDTO noteDTO) {
@@ -278,6 +295,6 @@ public class TelegramBotService extends TelegramLongPollingBot {
     public String getTokenToConnectUserWithBot() {
         User user = userService.getCurrentUser();
 
-        return tokenUtil.generateDeepLinkToken(user.getId());
+        return telegramUtil.generateDeepLinkToken(user.getId());
     }
 }

@@ -11,7 +11,6 @@ import java.util.Collections;
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
 
-
     private final User user;
 
     @Override

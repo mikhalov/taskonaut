@@ -1,4 +1,4 @@
-package com.mikhalov.taskonaut.util;
+package com.mikhalov.taskonaut.dto.telegram;
 
 import lombok.AllArgsConstructor;
 
