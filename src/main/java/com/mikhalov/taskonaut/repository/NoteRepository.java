@@ -29,4 +29,6 @@ public interface NoteRepository extends JpaRepository<Note, String>, JpaSpecific
     );
 
     Optional<Note> findByIdAndUserEmail(String id, String email);
+
+    Optional<Note> findByIdAndUserTelegramChatId(String id, Long chatId);
 }

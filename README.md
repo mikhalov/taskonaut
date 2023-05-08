@@ -16,7 +16,7 @@ Taskonaut offers a range of features to assist users in streamlining their note-
 
 ## Current Functionality List
 
-- User Authentication (JWT token in coockies): 
+- User Authentication (JWT token in cookies): 
   - Register. 
   - Login.
   - Validation for input credential on backend side(firstly simple validation on frontend side)
@@ -80,7 +80,7 @@ These instructions will help you set up the Taskonaut project on your local mach
 
 ### Prerequisites
 
-- Java 17 or higher
+- Java 20 or higher
 - Maven
 - PostgreSQL
 - Telegram Bot API token (if using Telegram notifications)

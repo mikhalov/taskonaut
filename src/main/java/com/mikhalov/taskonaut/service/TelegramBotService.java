@@ -35,6 +35,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private final UserService userService;
     private final LabelService labelService;
     private final NoteService noteService;
+    private final MessageQueueService messageQueueService;
     private final TelegramBotUtil telegramUtil;
     @Value("${telegram.bot.username}")
     private String botUsername;
@@ -42,12 +43,14 @@ public class TelegramBotService extends TelegramLongPollingBot {
     public TelegramBotService(@Value("${telegram.bot.token}") String botToken,
                               @Autowired UserService userService,
                               @Autowired LabelService labelService,
+                              @Autowired MessageQueueService messageQueueService,
                               @Autowired TelegramBotUtil telegramUtil,
                               @Autowired NoteService noteService) {
         super(botToken);
         this.userService = userService;
         this.labelService = labelService;
         this.noteService = noteService;
+        this.messageQueueService = messageQueueService;
         this.telegramUtil = telegramUtil;
     }
 
@@ -251,15 +254,14 @@ public class TelegramBotService extends TelegramLongPollingBot {
     }
 
 
-    public void findAndSendNoteToUserById(String noteId) throws TelegramBotHasNotConnectedException, ExecuteNoteMessageException {
+    public void findAndSendNoteToUserById(String noteId) throws TelegramBotHasNotConnectedException {
         Long chatId = userService.getCurrentUserTelegramChatId()
                 .orElseThrow(TelegramBotHasNotConnectedException::new);
-        NoteDTO noteDTO = noteService.getNoteDTOById(noteId);
 
-        sendNoteToBot(chatId, noteDTO);
+        messageQueueService.sendNoteToTelegramExchange(noteId, chatId);
     }
 
-    public void sendNoteToBot(Long chatId, NoteDTO noteDTO) throws ExecuteNoteMessageException {
+    public void sendNoteToBot(Long chatId, NoteDTO noteDTO) {
         String note = formatNoteForSending(noteDTO);
 
         if (note.length() > TELEGRAM_MESSAGE_LIMIT) {

@@ -14,7 +14,7 @@
 	<name>taskonaut</name>
 	<description>Pet Project</description>
 	<properties>
-		<java.version>19</java.version>
+		<java.version>20</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -44,6 +44,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
@@ -134,6 +143,15 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>20</source>
+					<target>20</target>
+					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>

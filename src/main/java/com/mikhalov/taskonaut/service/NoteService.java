@@ -3,6 +3,7 @@ package com.mikhalov.taskonaut.service;
 import com.mikhalov.taskonaut.dto.ExportParamsDTO;
 import com.mikhalov.taskonaut.dto.NoteDTO;
 import com.mikhalov.taskonaut.dto.SortAndPageDTO;
+import com.mikhalov.taskonaut.dto.NoteForTelegramDTO;
 import com.mikhalov.taskonaut.mapper.NoteMapper;
 import com.mikhalov.taskonaut.model.*;
 import com.mikhalov.taskonaut.model.enums.NoteSortOption;
@@ -176,5 +177,16 @@ public class NoteService {
         return noteMapper.toNoteDTOList(notes);
     }
 
+    public NoteDTO getNoteDTOById(NoteForTelegramDTO noteForTelegramDTO) {
+        String noteId = noteForTelegramDTO.noteId();
+        Long chatId = noteForTelegramDTO.chatId();
+
+        Note note = noteRepository.findByIdAndUserTelegramChatId(noteId, chatId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Note not found for current user chatId %s with id %s: ", chatId, noteId)
+                ));
+
+        return noteMapper.toNoteDTO(note);
+    }
 }
 
