@@ -15,14 +15,15 @@ public class MessageQueueListener {
     private final NoteService noteService;
     private final TelegramBotService telegramBotService;
 
-    @RabbitListener(queues = "notes-to-telegram")
+    @RabbitListener(queues = {"${spring.rabbitmq.note_to_telegram_queue}"})
     public void processNoteForTelegramBot(NoteForTelegramDTO noteForTelegramDTO) {
-        log.trace("process message from queue: noteId {} from queue for user chatId {}",
+        log.trace("process message from ${spring.rabbitmq.note_to_telegram_queue}:" +
+                        " noteId {} for user chatId {}",
                 noteForTelegramDTO.noteId(),
                 noteForTelegramDTO.chatId()
         );
 
-        NoteDTO noteDTO = noteService.getNoteDTOById(noteForTelegramDTO);
+        NoteDTO noteDTO = noteService.getNoteDTOByNoteForTelegramDTO(noteForTelegramDTO);
         telegramBotService.sendNoteToBot(noteForTelegramDTO.chatId(), noteDTO);
     }
 }

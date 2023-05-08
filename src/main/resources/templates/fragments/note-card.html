@@ -53,21 +53,28 @@
                                readonly>
                     </div>
                     <div class="menu-element">
-                        <button class="input-submit"  th:attr="note-id=${note.id}"
+                        <button class="input-submit" th:attr="note-id=${note.id}"
                                 onclick="openConfirmModal('note', this.getAttribute('note-id'))"
                                 type="button" id="deleteNoteButton">Delete this note
                         </button>
                     </div>
                     <div class="menu-element">
-                        <button class="input-submit"  th:attr="note-id=${note.id}"
+                        <button class="input-submit" th:attr="note-id=${note.id}"
                                 onclick="sendNoteToTelegram(this.getAttribute('note-id'))">Send note to telegram
                         </button>
                     </div>
+                    <div class="menu-element">
+                        <label for="notificationDateTime">Choose date and time:</label>
+                        <input type="datetime-local" id="notificationDateTime" name="notificationDateTime">
+                        <button class="input-submit" th:attr="note-id=${note.id}"
+                                onclick="setNotification(this.getAttribute('note-id'))">Set notification
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-
 </html>

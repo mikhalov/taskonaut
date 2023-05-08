@@ -20,7 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     window.onclick = function (event) {
-        closeMenu();
+        // Check if the click event target is inside the dropdown or a child of the dropdown
+       if (!event.target.closest(".dropdown-menu") || event.target.tagName === 'BUTTON') {
+               closeMenu();
+           }
     };
 
     function closeMenu() {
@@ -140,3 +143,36 @@ $(document).ready(function () {
         });
     });
 });
+
+// Function to handle setting the notification
+async function setNotification(noteId) {
+    const dateTime = document.getElementById("notificationDateTime").value;
+    if (dateTime) {
+        console.log("Notification set for:", dateTime, "Note ID:", noteId);
+
+        const notificationData = {
+            "noteId": noteId,
+            "reminderDateTime": dateTime
+        };
+
+        try {
+            const response = await fetch('/telegram/set-reminder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(notificationData)
+            });
+
+            if (response.ok) {
+                console.log(await response.text());
+            } else {
+                console.error("Failed to set reminder:", response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error("Error while setting reminder:", error);
+        }
+    } else {
+        console.log("No date and time selected");
+    }
+}

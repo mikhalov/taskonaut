@@ -10,7 +10,7 @@ public class TemporaryUserEntry {
 
 
     private final Instant creationTime = Instant.now();
-    private final  Duration expirationDuration;
+    private final Duration expirationDuration;
     private final String userId;
 
     public String getUserId() {

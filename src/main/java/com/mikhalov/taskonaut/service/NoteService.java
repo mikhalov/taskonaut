@@ -177,7 +177,7 @@ public class NoteService {
         return noteMapper.toNoteDTOList(notes);
     }
 
-    public NoteDTO getNoteDTOById(NoteForTelegramDTO noteForTelegramDTO) {
+    public NoteDTO getNoteDTOByNoteForTelegramDTO(NoteForTelegramDTO noteForTelegramDTO) {
         String noteId = noteForTelegramDTO.noteId();
         Long chatId = noteForTelegramDTO.chatId();
 

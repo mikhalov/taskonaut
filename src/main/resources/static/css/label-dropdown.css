@@ -48,6 +48,10 @@
     overflow: auto;
 }
 
+.menu-element label {
+    font-size: 12px;
+}
+
 .menu-element * {
     background: transparent;
     color: #f5f5f5;
@@ -58,6 +62,8 @@
     text-align: left;
     border: none;
 }
+
+
 
 .input-submit,
 .dropdown-item {

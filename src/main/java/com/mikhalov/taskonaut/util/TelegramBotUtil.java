@@ -28,7 +28,7 @@ public class TelegramBotUtil {
         return token;
     }
 
-    public String getUserIdFromToken(String token) throws TelegramConnectionTokenException {
+    public String getUserIdByToken(String token) throws TelegramConnectionTokenException {
         TemporaryUserEntry userEntry = Optional.ofNullable(tokenMap.get(token))
                 .orElseThrow(() -> new TelegramConnectionTokenException(
                         "Wrong command! Use only available in menu commands")

@@ -40,9 +40,10 @@ public class TelegramController {
     }
 
     @PostMapping("/set-reminder")
-    public ResponseEntity<Void> setReminder(@RequestBody @Valid ReminderDTO reminderDTO) {
-        telegramBotService.findAndSendNoteToUserById(reminderDTO.noteId());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> setReminder(@RequestBody @Valid ReminderDTO reminderDTO) {
+        telegramBotService.setReminderForNote(reminderDTO);
+
+        return ResponseEntity.ok("Reminder successful set");
     }
 
 }

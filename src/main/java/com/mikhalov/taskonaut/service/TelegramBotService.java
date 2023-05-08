@@ -139,7 +139,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private void executeTokenAndSaveChatIdToUser(Long chatId, String inputText) {
         String token = inputText.replace("/start ", "");
         try {
-            String userId = telegramUtil.getUserIdFromToken(token);
+            String userId = telegramUtil.getUserIdByToken(token);
             userService.setTelegramChatIdByUserId(chatId, userId);
             String successful = "Connected with Tasconaut app. \nNow you can use me";
 
@@ -255,10 +255,20 @@ public class TelegramBotService extends TelegramLongPollingBot {
 
 
     public void findAndSendNoteToUserById(String noteId) throws TelegramBotHasNotConnectedException {
-        Long chatId = userService.getCurrentUserTelegramChatId()
-                .orElseThrow(TelegramBotHasNotConnectedException::new);
+        Long chatId = getChatIdIfUserConnected();
 
         messageQueueService.sendNoteToTelegramExchange(noteId, chatId);
+    }
+
+    public void setReminderForNote(ReminderDTO reminderDTO) {
+        Long chatId = getChatIdIfUserConnected();
+
+        messageQueueService.setReminderForTelegram(reminderDTO, chatId);
+    }
+
+    private Long getChatIdIfUserConnected() throws TelegramBotHasNotConnectedException {
+        return userService.getCurrentUserTelegramChatId()
+                .orElseThrow(TelegramBotHasNotConnectedException::new);
     }
 
     public void sendNoteToBot(Long chatId, NoteDTO noteDTO) {
