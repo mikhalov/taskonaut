@@ -88,7 +88,7 @@ These instructions will help you set up the Taskonaut project on your local mach
 ### Installation
 
 1. Clone the repository:
-   git clone https://github.com/larbadge/taskonaut.git
+   git clone https://github.com/mikhalov/taskonaut.git
 
 2. Navigate to the project directory:
    cd taskonaut
